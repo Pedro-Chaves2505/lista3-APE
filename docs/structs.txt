@@ -1,0 +1,114 @@
+[1]	LISTA DE TODAS AS MARCAS (2-5)
+
+FABRICANTE[x].nome_marca ... ok
+FABRICANTE[x].site... ok
+FABRICANTE[x].telefone...ok
+
+
+(i.)	PARA APRESENTAR DE QUAL UF O PRODUTO EH:
+PRODUTO[x].id_uf ....ex.: PRODUTO[37].id_uf = 16 -> UF[PRODUTO[37].id_uf].nome = UF[16].nome = TO ... ok
+
+----------------------------------------------------------------------------------------------------------------
+
+[2] LISTAR TODOS OS PRODUTOS (5-50)
+
+PRODUTO[x].descricao ... ok
+PRODUTO[x].peso... ok
+PRODUTO[x].valor_compra ... ok
+PRODUTO[x].valor_venda ... ok
+Valor de lucro : (PRODUTOS[x].valor_venda) - (PRODUTOS[x].valor_compra) ..auxílio de função.. ok
+Percent lucro: { (Valor de lucro) / (PRODUTOS[x].valor_venda) * 100 } ..auxílio de função.. ok
+
+
+(i.i.)	PARA APRESENTAR DE QUAL FABRICANTE O PRODUTO EH:
+PRODUTO[x].id_fabricante ....ex.: PRODUTO[42].id_fabricante = 2 -> FABRICANTE[PRODUTO[42].id_fabricante].nome_marca = FABRICANTE[2].nome_marca = sadia ... ok
+
+----------------------------------------------------------------------------------------------------------------
+
+[3] LISTAR PRODUTOS DE UMA DETERMINADA UF -> PRODUTO[].descricao | PRODUTO[].peso | PRODUTO[].valor_compra | PRODUTO[].valor_venda
+
+@ ATENÇÃO!!@ podemos ter uma UF com mais de um produto 
+PRODUTO[28].id_uf = 27
+PRODUTO[32].id_uf = 27
+*******************************************************************************
+Ex.: SELECIONE UMA UF DISPONÍVEL: [27]DF
+					    [22]TO
+
+listar produtos do DF -> UF[26].id_uf = 27
+// 
+
+for(i=0;i<QTD_PRODUTO;i++){ 
+	retorno = strcmp( PRODUTO[i].id_uf, UF[26].id_uf ) // comparação @@
+
+	if( retorno == 0 ){ // se forem iguais lista as especificações do produto
+		PRODUTO[i].descricao
+		PRODUTO[i].peso
+		PRODUTO[i].valor_compra
+		PRODUTO[i].valor_venda
+		valor do lucro 	@@ aux de funcao
+		valor percent de lucro	@@ aux de funcao
+		FABRICANTE[PRODUTO[i].id_fabricante].nome_marca ... (i.i.)PARA APRESENTAR DE QUAL FABRICANTE O PRODUTO EH
+	}
+}
+*******************************************************************************
+
+
+----------------------------------------------------------------------------------------------------------------
+[4] LISTAR PRODUTOS DE UMA DETERMINADA MARCA(nome) -> PRODUTO[].descricao | PRODUTO[].peso | PRODUTO[].valor_compra | PRODUTO[].valor_venda
+@@como deixar dinamico, dentro da comparação, a opção de marca que o usuário escolhe??@
+
+
+*******************************************************************************
+Ex.: SELECIONE UMA MARCA DISPONÍVEL: [1]NIKE -> FABRICANTE[0].id_fabricante = 1
+						 [5]AMAZON
+
+listar produtos da AMAZON -> FABRICANTE[4].id_fabricante = 5
+// 
+
+for(i=0;i<QTD_PRODUTO;i++){ 
+	retorno = strcmp( PRODUTO[i].id_fabricante, FABRICANTE[4].id_fabricante ) // comparação @@
+
+	if( retorno == 0 ){ 
+		PRODUTO[i].descricao 
+		PRODUTO[i].peso
+		PRODUTO[i].valor_compra
+		PRODUTO[i].valor_venda
+		valor do lucro	@@ aux de funcao
+		valor percent de lucro	@@ aux de funcao
+		FABRICANTE[PRODUTO[i].id_fabricante].nome_marca ... (i.i.)PARA APRESENTAR DE QUAL FABRICANTE O PRODUTO EH
+		
+	}
+}
+*******************************************************************************
+
+----------------------------------------------------------------------------------------------------------------
+
+
+[5] NOME DAS UF COM O PRODUTO MAIS CARO -> UF[].nome
+@@podemos ter mais de uma UF com produtos diferentes mais valor_venda igual!!! nesse caso os dois devem aparecer 
+
+PRODUTO[32].id_uf = 27 -> UF[PRODUTO[32].id_uf].nome = DF ... 
+UF[produto[37].id_uf].nome = UF[16].nome = TO
+
+PRODUTO[UF[27].id_produto[i]].valor_venda // ... (i.i.i.)
+
+**
+
+
+
+
+[6] APRESENTAR O(s) FABRICANTE(s) ONDE ESTA REGISTRADO O PRODUTO MAIS BARATO
+
+fabricante[produto["indice-menor-preço"].id_fabricante].nome_marca
+
+----------------------------------------------------------------------------------------------------------------
+
+[7] LISTAR TODOS OS PRODUTOS EM ORDEM CRESCENTE DE VALOR
+
+PRODUTO[].valor_venda ... bubble sort
+
+----------------------------------------------------------------------------------------------------------------
+
+[8] LISTAR TODOS OS PRODUTOS EM ORDEM CRESCENTE DE MAIOR PERCENTUAL DE LUCRO
+
+
