@@ -1,4 +1,4 @@
-# Inventory Manager
+# Projeto 3 (Lista Avaliativa 3)
 
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 
@@ -6,25 +6,25 @@
 
 ## Índice 
 
-- [Inventory Manager](#inventory-manager)
-  - [Índice](#índice)
-  - [Descrição do projeto](#descrição-do-projeto)
-  - [:hammer: Funcionalidades do projeto](#hammer-funcionalidades-do-projeto)
-  - [📁 Acesso ao projeto](#-acesso-ao-projeto)
-  - [✔️ Técnicas e tecnologias utilizadas](#️-técnicas-e-tecnologias-utilizadas)
-  - [Autores](#autores)
+- [Projeto 3 (Lista Avaliativa 3)](#Projeto 3 (Lista Avaliativa 3))
+- [Índice](#índice)
+- [Descrição do projeto](#descrição-do-projeto)
+- [:hammer: Funcionalidades do projeto](#hammer-funcionalidades-do-projeto)
+- [📁 Acesso ao projeto](#-acesso-ao-projeto)
+- [✔️ Técnicas e tecnologias utilizadas](#️-técnicas-e-tecnologias-utilizadas)
+- [Autores](#autores)
 
 ## Descrição do projeto
-O Invetory Manager (Gerente de estoque), tem o principal objetivo em atualizar preços e estoque de todos os produtos da loja KAIZENAUTOPECAS no Mercado livre. Também realiza manutenções de anúncios com outro projeto da organização da empresa, chamado WALL-E que também está no repositório inicial.
+O Projeto 3 (Lista Avaliativa 3) tem o objetivo de aprendizado ao GIT e todos o conteudos passados em sala de aula.
 
-![Exemplo do Projeto](./docs/img.jpg)
+![Exemplo do Projeto](./docs/struct-img.jpg)
 
 ## :hammer: Funcionalidades do projeto
 
-- `Funcionalidade 1`: Requisita toda as informacoes dos anúncios do Seller MercadoLivre, via API.
-- `Funcionalidade 2`: Consulta o preco e estoque atual da empresa. Via banco de dados, plataforma POSTGRES.
-- `Funcionalidade 2a`: Compara preco e estoque atual com o antigo, realizando as próximas requisições na API. Depois atualiza o banco de dados com as novas informacoes.
-- `Funcionalidade 3`: Realiza reciclagem em anúncios muitos antigos.
+- `Funcionalidade 1`: Criacao de um menu.
+- `Funcionalidade 2`: Entrada e saida de dados.
+- `Funcionalidade 2a`: Contas simples (Multiplicacao, soma e porcentagem.)
+- `Funcionalidade 3`: Apresentacao dos resultadados.
 
 ## 📁 Acesso ao projeto
 Você pode acessar os arquivos do projeto clicando [aqui](https://github.com/Pedro-Chaves2505/lista3-APE).
