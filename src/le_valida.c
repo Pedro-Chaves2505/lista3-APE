@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 
 char le_valida_char(char strin[],int length,bool negation,char msg[]);
@@ -42,7 +41,7 @@ int le_valida_lista(int lista[],int length,bool negation,char msg[]) { //lista a
 	return n;
 }
 
-int le_valida_constraint(int min, int max,bool negation,char msg[]) { //valor mínimo, valor máximo, (0 ou false) estar dentro dos constraints e (1 ou true) de deve estar fora,mensagem
+int le_valida_constraint(int min, int max,bool negation,char msg[]) { //valor mÃ­nimo, valor mÃ¡ximo, (0 ou false) estar dentro dos constraints e (1 ou true) de deve estar fora,mensagem
 	int n=0;
 	bool inc=false;
 	if (min > max) {
