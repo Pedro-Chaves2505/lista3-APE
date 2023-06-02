@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdio.h>
 
 char le_valida_char(char strin[],int length,bool negation,char msg[]);
 int le_valida_lista(int lista[],int length,bool negation,char msg[]);
