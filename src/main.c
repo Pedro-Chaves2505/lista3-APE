@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "le_valida.c"
 
 typedef struct{
     char descricao[50];
