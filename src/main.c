@@ -194,4 +194,5 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada)
     printf("\n==============================================================================\n");
     printf("     MARCA       |               SITE               |     TELEFONE     |   UF   \n");
     nome__marca_compactado(fabricante, marca_registrada);
+    //teste
 }
