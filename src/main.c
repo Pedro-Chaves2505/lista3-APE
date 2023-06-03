@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// @@ como varrer uma string que é membro de uma struct?
-
 typedef struct
 {
     char descricao[50];
@@ -34,9 +32,14 @@ int le_valida_marca(FABRICANTE *fabricante, UF*uf);
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf);
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF*uf);
 
+void DescricaoProduto(PRODUTO* produto, int i);
 void ValorVendaProduto(PRODUTO* produto, int i);
 void ValorCompraProduto(PRODUTO* produto, int i);
 void PesoProduto(PRODUTO* produto,int i);
+float ValorDeLucro(PRODUTO* produto, int i, float ValorLucro);
+float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro ,float PercentualLucro);
+int le_valida_produto(PRODUTO* produto, UF*uf);
+
 
 int main()
 {
@@ -44,9 +47,10 @@ int main()
     PRODUTO produto[50];
     FABRICANTE fabricante[5];
     UF uf[27];
-    int qtd_marcas;
-    qtd_marcas = le_valida_marca(fabricante, uf);
+    int qtd_marcas,qtd_produtos;
 
+    qtd_marcas = le_valida_marca(fabricante, uf);
+    //qtd_produtos = le_valida_produto(produto, uf);
     EstruturaTabela(fabricante, qtd_marcas, uf);
 
     return 0;
@@ -81,19 +85,18 @@ void RegistrarUf(UF *uf, int i)
     // validacao - menu com as UF jah definidas
 }
 
-int le_valida_marca(FABRICANTE *fabricante, UF*uf)
-{ // CHAMADA NA MAIN -> qtd_marcas = le_valida_marca(fabricante);
-    int i = 0, marca_registrada = 2;
+int le_valida_marca(FABRICANTE *fabricante, UF*uf){ // CHAMADA NA MAIN -> qtd_marcas = le_valida_marca(fabricante);
+    int marca_registrada = 0;
     char confirm;
 
-    while (i < 2)
+    while (marca_registrada < 2)
     { // minimo de 2 marcas registradas
-        RegistrarMarca((*fabricante).nome_marca, i);
-        RegistrarSite(fabricante, i);
-        RegistrarTelefone(fabricante, i);
-        RegistrarUf(uf, i);
-        // RegistrarUf();
-        i++;
+        RegistrarMarca(fabricante, marca_registrada);
+        RegistrarSite(fabricante, marca_registrada);
+        RegistrarTelefone(fabricante, marca_registrada);
+        RegistrarUf(uf, marca_registrada);
+        
+        marca_registrada++;
     }
 
     do
@@ -101,16 +104,16 @@ int le_valida_marca(FABRICANTE *fabricante, UF*uf)
         printf("\nDeseja cadastrar outra marca:(S/N)\n>");
         scanf(" %c", &confirm);
 
-        if ((confirm == 's' || confirm == 'S') && i < 5)
+        if ((confirm == 's' || confirm == 'S') && marca_registrada < 5)
         {
-            RegistrarMarca(fabricante, i);
-            RegistrarSite(fabricante, i);
-            RegistrarTelefone(fabricante, i);
-            RegistrarUf(uf, i);
+            RegistrarMarca(fabricante, marca_registrada);
+            RegistrarSite(fabricante, marca_registrada);
+            RegistrarTelefone(fabricante, marca_registrada);
+            RegistrarUf(uf, marca_registrada);
             marca_registrada++;
         }
-        i++;
-    } while ((confirm == 's' || confirm == 'S') && i < 5);
+        
+    } while ((confirm == 's' || confirm == 'S') && marca_registrada < 5);
 
     return marca_registrada;
 }
@@ -407,6 +410,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf)
 /*--------------------------- [2]LISTAR TODOS OS PRODUTOS -----------------*/
 
 void DescricaoProduto(PRODUTO* produto, int i){
+    printf("\n\t%do PRODUTO\n",i+1);
     printf("Informe a descricao:\n> ");
     scanf(" %[^\n]s", (*(produto+i)).descricao);
     // validacao
@@ -414,40 +418,100 @@ void DescricaoProduto(PRODUTO* produto, int i){
 
 void PesoProduto(PRODUTO* produto,int i){
     printf("Infome o peso:\n> ");
-    scanf("%.2f",(*(produto+i)).peso);
+    scanf("%f", &produto[i].peso);
 
 }
 
 void ValorVendaProduto(PRODUTO* produto, int i){
-    printf("%do Produto - Informe o valor de venda:\n> ", i+1);
-    scanf("%.2f", (*(produto+i)).valor_venda);
+    printf("Informe o valor de venda:\n> ");
+    scanf("%f", &produto[i].valor_venda);
     // validação
 }
 
 void ValorCompraProduto(PRODUTO* produto, int i){
-    printf("%do Produto - Informe o valor de compra:\n> ", i+1);
-    scanf("%.2f", (*(produto+i)).valor_compra);
+    printf("Informe o valor de compra:\n> ");
+    scanf("%f", &produto[i].valor_compra);
     // validação
+}
+
+float ValorDeLucro(PRODUTO* produto, int i, float ValorLucro){
+    ValorLucro = produto[i].valor_venda - produto[i].valor_compra;
+    return ValorLucro;
+}
+
+float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro ,float PercentualLucro){
+    PercentualLucro = (ValorDeLucro(produto, i, ValorLucro) / produto[i].valor_venda) * 100;
+
+    return PercentualLucro;
+}
+int le_valida_produto(PRODUTO* produto, UF*uf){ // CHAMADA NA MAIN --> qtd_produtos = le_valida_produto(produto, uf);
+    int produto_registrado=0;
+    char confirm;
+
+    while(produto_registrado<5)
+    { // minimo de 5 produtos registrados
+        DescricaoProduto(produto, produto_registrado);
+        PesoProduto(produto, produto_registrado);
+        ValorCompraProduto(produto, produto_registrado);
+        ValorVendaProduto(produto, produto_registrado);
+        RegistrarUf(uf, produto_registrado);
+        produto_registrado++;
+    }
+
+    do
+    {
+        printf("\nDeseja cadastrar outro produto:(S/N)\n>");
+        scanf(" %c", &confirm);
+
+        if ((confirm == 's' || confirm == 'S') && produto_registrado < 50)
+        {
+            DescricaoProduto(produto, produto_registrado);
+            PesoProduto(produto, produto_registrado);
+            ValorCompraProduto(produto, produto_registrado);
+            ValorVendaProduto(produto, produto_registrado);
+            RegistrarUf(uf, produto_registrado);
+            produto_registrado++;
+        }
+
+    } while ((confirm == 's' || confirm == 'S') && produto_registrado < 50);
+    
+    return produto_registrado;
+}
+
+void nome_produto_compactado(PRODUTO* produto, int produto_registrado, UF* uf){
+    int i;
+
+    for(i=0;i<produto_registrado;i++){
+        if(i==0){
+            printf("-----------+-----------------+-----------------+----------------+--------------------+-----------------------------------\n");
+        }
+        else{
+            printf("\n-----------+-----------------+-----------------+----------------+--------------------+-----------------------------------\n");
+        }
+    }
+
 }
 /*-----------------------------------------------------------------------*/
 
 /*------------------------------- OUTPUT --------------------------------*/
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF* uf)
 {
+    char cabecalhoFabricante[80]="     MARCA       |               SITE               |     TELEFONE     |   UF   ";
+    char cabecalhoProduto[]="   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |          DESCRICAO                ";
     
-
-    // char TipoRelatorio[81] = {"                          RELATORIO 1 - LISTA DE TODAS AS MARCAS                "};
-    // char Topicos[82] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
-    //  qtd_carac_nome -> guarda a quantidade de caracteres que cada nome possui
-    
-
-    printf("\n==============================================================================\n");
+    // se o usuario selecionar a opção 1 do menu principal imprime esta tabela{
+    printf("\n================================================================================\n");
     printf("                          RELATORIO 1 - LISTA DE TODAS AS MARCAS                ");
-    printf("\n==============================================================================\n");
-    printf("     MARCA       |               SITE               |     TELEFONE     |   UF   \n");
-    
-    
-    nome__marca_compactado(fabricante, marca_registrada, uf); //... nao eh eficiente.... irei fazer por matrizes
-    
+    printf("\n================================================================================\n");
+    printf("%s\n",cabecalhoFabricante); 
+    nome__marca_compactado(fabricante, marca_registrada, uf);
+    //}
+
+    //se o usuario selecionar a opção 2 do menu principal imprime esta tabela{
+    //printf("\n==========================================================================================================================\n");
+    //printf("                                         RELATORIO 2 - LISTA DE TODOS OS PRODUTOS                                             ");
+    //printf("\n==========================================================================================================================\n");
+    //printf("%s\n",cabecalhoProduto);
+    //nome_produto_compactado(...)
 }
 
