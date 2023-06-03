@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <string.h>
-
+#define MIN_PRODUTO 5
+#define MAX_PRODUTO 50
+#define MIN_FABRICANTE 2
+#define MAX_FABRICANTE 5
 typedef struct
 {
-    char descricao[50];
+    char descricao[25]; 
+    char digitosPeso[16], dig_V_Venda[16],dig_V_Compra[16], dig_V_lucro[16], dig_P_lucro[16];
     float peso, valor_compra, valor_venda;
     int id_uf, id_fabricante;
     int id_produto;
@@ -30,14 +34,15 @@ void RegistrarUf(UF *uf, int i);
 int le_valida_marca(FABRICANTE *fabricante, UF*uf);
 
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf);
-void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF*uf);
+void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF* uf,PRODUTO* produto, int produto_registrado);
+
 
 void DescricaoProduto(PRODUTO* produto, int i);
 void ValorVendaProduto(PRODUTO* produto, int i);
 void ValorCompraProduto(PRODUTO* produto, int i);
 void PesoProduto(PRODUTO* produto,int i);
-float ValorDeLucro(PRODUTO* produto, int i, float ValorLucro);
-float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro ,float PercentualLucro);
+float ValorDeLucro(PRODUTO* produto, int i);
+float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro);
 int le_valida_produto(PRODUTO* produto, UF*uf);
 
 
@@ -49,9 +54,9 @@ int main()
     UF uf[27];
     int qtd_marcas,qtd_produtos;
 
-    qtd_marcas = le_valida_marca(fabricante, uf);
-    //qtd_produtos = le_valida_produto(produto, uf);
-    EstruturaTabela(fabricante, qtd_marcas, uf);
+    //qtd_marcas = le_valida_marca(fabricante, uf);
+    qtd_produtos = le_valida_produto(produto, uf);
+    EstruturaTabela(fabricante, qtd_marcas, uf, produto, qtd_produtos);
 
     return 0;
 }
@@ -89,7 +94,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF*uf){ // CHAMADA NA MAIN -> qtd_ma
     int marca_registrada = 0;
     char confirm;
 
-    while (marca_registrada < 2)
+    while (marca_registrada < MIN_FABRICANTE)
     { // minimo de 2 marcas registradas
         RegistrarMarca(fabricante, marca_registrada);
         RegistrarSite(fabricante, marca_registrada);
@@ -104,7 +109,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF*uf){ // CHAMADA NA MAIN -> qtd_ma
         printf("\nDeseja cadastrar outra marca:(S/N)\n>");
         scanf(" %c", &confirm);
 
-        if ((confirm == 's' || confirm == 'S') && marca_registrada < 5)
+        if ((confirm == 's' || confirm == 'S') && marca_registrada < MAX_FABRICANTE)
         {
             RegistrarMarca(fabricante, marca_registrada);
             RegistrarSite(fabricante, marca_registrada);
@@ -113,7 +118,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF*uf){ // CHAMADA NA MAIN -> qtd_ma
             marca_registrada++;
         }
         
-    } while ((confirm == 's' || confirm == 'S') && marca_registrada < 5);
+    } while ((confirm == 's' || confirm == 'S') && marca_registrada < MAX_FABRICANTE);
 
     return marca_registrada;
 }
@@ -417,30 +422,32 @@ void DescricaoProduto(PRODUTO* produto, int i){
 }
 
 void PesoProduto(PRODUTO* produto,int i){
-    printf("Infome o peso:\n> ");
+    printf("Infome o peso(KG):\n> ");
     scanf("%f", &produto[i].peso);
 
 }
 
 void ValorVendaProduto(PRODUTO* produto, int i){
-    printf("Informe o valor de venda:\n> ");
+    printf("Informe o valor de venda(R$):\n> ");
     scanf("%f", &produto[i].valor_venda);
     // validação
 }
 
 void ValorCompraProduto(PRODUTO* produto, int i){
-    printf("Informe o valor de compra:\n> ");
+    printf("Informe o valor de compra(R$):\n> ");
     scanf("%f", &produto[i].valor_compra);
     // validação
 }
 
-float ValorDeLucro(PRODUTO* produto, int i, float ValorLucro){
+float ValorDeLucro(PRODUTO* produto, int i){
+    float ValorLucro;
     ValorLucro = produto[i].valor_venda - produto[i].valor_compra;
     return ValorLucro;
 }
 
-float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro ,float PercentualLucro){
-    PercentualLucro = (ValorDeLucro(produto, i, ValorLucro) / produto[i].valor_venda) * 100;
+float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro){
+    float PercentualLucro;
+    PercentualLucro = (ValorDeLucro(produto, i) / produto[i].valor_venda) * 100;
 
     return PercentualLucro;
 }
@@ -448,7 +455,7 @@ int le_valida_produto(PRODUTO* produto, UF*uf){ // CHAMADA NA MAIN --> qtd_produ
     int produto_registrado=0;
     char confirm;
 
-    while(produto_registrado<5)
+    while(produto_registrado<MIN_PRODUTO)
     { // minimo de 5 produtos registrados
         DescricaoProduto(produto, produto_registrado);
         PesoProduto(produto, produto_registrado);
@@ -463,7 +470,7 @@ int le_valida_produto(PRODUTO* produto, UF*uf){ // CHAMADA NA MAIN --> qtd_produ
         printf("\nDeseja cadastrar outro produto:(S/N)\n>");
         scanf(" %c", &confirm);
 
-        if ((confirm == 's' || confirm == 'S') && produto_registrado < 50)
+        if ((confirm == 's' || confirm == 'S') && produto_registrado < MAX_PRODUTO)
         {
             DescricaoProduto(produto, produto_registrado);
             PesoProduto(produto, produto_registrado);
@@ -473,45 +480,140 @@ int le_valida_produto(PRODUTO* produto, UF*uf){ // CHAMADA NA MAIN --> qtd_produ
             produto_registrado++;
         }
 
-    } while ((confirm == 's' || confirm == 'S') && produto_registrado < 50);
+    } while ((confirm == 's' || confirm == 'S') && produto_registrado < MAX_PRODUTO);
     
     return produto_registrado;
 }
 
 void nome_produto_compactado(PRODUTO* produto, int produto_registrado, UF* uf){
     int i;
+    float VetLucro[produto_registrado];
+    float VetPercLucro[produto_registrado];
 
-    for(i=0;i<produto_registrado;i++){
+    for(i=0;i<produto_registrado;i++){ // ESCOPO MAIS ABRANGENTE
+        VetLucro[i] = ValorDeLucro(produto, i);
+        VetPercLucro[i] = ValorPercentualLucro(produto, i, VetLucro[i]); 
+        int ContPosicao=0;
+
         if(i==0){
-            printf("-----------+-----------------+-----------------+----------------+--------------------+-----------------------------------\n");
+            printf("-----------+-----------------+-----------------+----------------+--------------------+---------+-------------------------\n");
         }
         else{
-            printf("\n-----------+-----------------+-----------------+----------------+--------------------+-----------------------------------\n");
+            printf("\n-----------+-----------------+-----------------+----------------+--------------------+---------+-------------------------\n");
         }
+        
+
+        /*Descobrindo a quantidade de posicoes que tem em cada digito*/
+            // futuramente passar para funcao
+            int posicoesPeso; // quantidade de digitos
+            PRODUTO stringPeso; // representacao do numero como string
+            sprintf(stringPeso.digitosPeso ,"%.2f", produto[i].peso);
+            posicoesPeso =strlen(stringPeso.digitosPeso); // numero de digitos no produto[i].peso
+            //-------------------------------
+            
+            PRODUTO stringValorVenda;
+            sprintf(stringValorVenda.dig_V_Venda, "%.2f", produto[i].valor_venda);
+            int posicoesValorVenda = strlen(stringValorVenda.dig_V_Venda);// numero de digitos no produto[i].valor_venda
+
+            PRODUTO stringValorLucro;
+            sprintf(stringValorLucro.dig_V_lucro, "%.2f", VetLucro[i]);
+            int posicoesValorLucro = strlen(stringValorLucro.dig_V_lucro);
+
+            PRODUTO stringPercentualLucro;
+            sprintf(stringPercentualLucro.dig_P_lucro, "%.2f", VetPercLucro[i]);
+            int posicoesPercLucro = strlen(stringPercentualLucro.dig_P_lucro);
+        /*==========================================================*/
+        printf("%.2f KG",produto[i].peso);
+
+        ContPosicao = posicoesPeso;
+        while(ContPosicao<8){
+            printf(" ");
+            if(ContPosicao==7){
+                printf("| ");
+            }
+            ContPosicao++;
+        }
+        printf("R$ %.2f",produto[i].valor_venda);
+
+        ContPosicao+= posicoesValorVenda;
+        while(ContPosicao<21){
+            printf(" ");
+            if(ContPosicao==20){
+                printf("| ");
+            }
+            ContPosicao++;
+        }
+        printf("R$ %.2f",produto[i].valor_compra);
+
+        ContPosicao+= posicoesValorLucro;
+        while(ContPosicao<34){
+            printf(" ");
+            if(ContPosicao==33){
+                printf("| ");
+            }
+            ContPosicao++;
+        }
+        printf("R$ %.2f",VetLucro[i]);
+
+        ContPosicao+= posicoesPercLucro;
+        while(ContPosicao<47){
+            printf(" ");
+            if(ContPosicao==46){
+                printf("|     ");
+            }
+            ContPosicao++;
+        }
+        printf("%.2f %%",VetPercLucro[i]);
+
+        while(ContPosicao<55){
+            printf(" ");
+            if(ContPosicao==54){
+                printf("|  ");
+            }
+            ContPosicao++;
+        }
+        printf(" %s",uf[i].nome); 
+
+        while(ContPosicao<59){
+            printf(" ");
+            if(ContPosicao==58){
+                printf("| ");
+            }
+            ContPosicao++;
+        }
+
+        printf("%s",produto[i].descricao); // alterar para -->imprimir caracter por caracter se a descricao for maior que 25
+
+        //printf("%.2f\t%.2f\t%.2f\n",produto[i].valor_compra, produto[i].valor_venda,VetLucro[i]);
+        //printf("%.2f\t%.2f",produto[i].peso, produto[i].valor_venda, produto[i].valor_compra);
     }
 
 }
 /*-----------------------------------------------------------------------*/
 
 /*------------------------------- OUTPUT --------------------------------*/
-void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF* uf)
+void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF* uf,PRODUTO* produto, int produto_registrado)
 {
     char cabecalhoFabricante[80]="     MARCA       |               SITE               |     TELEFONE     |   UF   ";
-    char cabecalhoProduto[]="   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |          DESCRICAO                ";
+    char cabecalhoProduto[]="   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |   UF    |          DESCRICAO                ";
     
-    // se o usuario selecionar a opção 1 do menu principal imprime esta tabela{
+    // se o usuario selecionar a opção 1,6 do menu principal imprime esta tabela{
+    
+    /*
     printf("\n================================================================================\n");
     printf("                          RELATORIO 1 - LISTA DE TODAS AS MARCAS                ");
     printf("\n================================================================================\n");
     printf("%s\n",cabecalhoFabricante); 
     nome__marca_compactado(fabricante, marca_registrada, uf);
+    */
+
     //}
 
-    //se o usuario selecionar a opção 2 do menu principal imprime esta tabela{
-    //printf("\n==========================================================================================================================\n");
-    //printf("                                         RELATORIO 2 - LISTA DE TODOS OS PRODUTOS                                             ");
-    //printf("\n==========================================================================================================================\n");
-    //printf("%s\n",cabecalhoProduto);
-    //nome_produto_compactado(...)
+    //se o usuario selecionar a opção 2,3,4,5,7,8,9 do menu principal imprime esta tabela{
+    printf("\n==========================================================================================================================\n");
+    printf("                                         RELATORIO 2 - LISTA DE TODOS OS PRODUTOS                                             ");
+    printf("\n==========================================================================================================================\n");
+    printf("%s\n",cabecalhoProduto);
+    nome_produto_compactado(produto, produto_registrado, uf);
 }
 
