@@ -28,12 +28,11 @@ typedef struct
 void RegistrarMarca(FABRICANTE *fabricante, int i);
 void RegistrarSite(FABRICANTE *fabricante, int i);
 void RegistrarTelefone(FABRICANTE *fabricante, int i);
-void RegistrarUf();
-int le_valida_marca(FABRICANTE *fabricante);
-void ImprimeMarca(int marca_registrada, FABRICANTE *fabricante);
-void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada);
-void nome__site_compactado(FABRICANTE *fabricante, int marca_registrada);
-void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada);
+void RegistrarUf(UF *uf, int i);
+int le_valida_marca(FABRICANTE *fabricante, UF*uf);
+
+void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf);
+void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF*uf);
 
 void ValorVendaProduto(PRODUTO* produto, int i);
 void ValorCompraProduto(PRODUTO* produto, int i);
@@ -46,9 +45,9 @@ int main()
     FABRICANTE fabricante[5];
     UF uf[27];
     int qtd_marcas;
-    qtd_marcas = le_valida_marca(fabricante);
+    qtd_marcas = le_valida_marca(fabricante, uf);
 
-    EstruturaTabela(fabricante, qtd_marcas);
+    EstruturaTabela(fabricante, qtd_marcas, uf);
 
     return 0;
 }
@@ -71,16 +70,18 @@ void RegistrarSite(FABRICANTE *fabricante, int i)
 void RegistrarTelefone(FABRICANTE *fabricante, int i)
 {
     printf("Informe o Telefone:\n> ");
-    scanf(" %[^\n]s", &fabricante[i].telefone);
+    scanf(" %[^\n]s", (*(fabricante + i)).telefone);
     // acrescentar a validação para o telefone
 }
 
-void RegistrarUf()
+void RegistrarUf(UF *uf, int i)
 {
-    printf("Selecione uma UF:");
-    // menu com as UF jah definidas
+    printf("Selecione uma UF:\n> ");
+    scanf(" %[^\n]s", (*(uf+i)).nome); // apenas para testes
+    // validacao - menu com as UF jah definidas
 }
-int le_valida_marca(FABRICANTE *fabricante)
+
+int le_valida_marca(FABRICANTE *fabricante, UF*uf)
 { // CHAMADA NA MAIN -> qtd_marcas = le_valida_marca(fabricante);
     int i = 0, marca_registrada = 2;
     char confirm;
@@ -90,6 +91,7 @@ int le_valida_marca(FABRICANTE *fabricante)
         RegistrarMarca((*fabricante).nome_marca, i);
         RegistrarSite(fabricante, i);
         RegistrarTelefone(fabricante, i);
+        RegistrarUf(uf, i);
         // RegistrarUf();
         i++;
     }
@@ -104,6 +106,7 @@ int le_valida_marca(FABRICANTE *fabricante)
             RegistrarMarca(fabricante, i);
             RegistrarSite(fabricante, i);
             RegistrarTelefone(fabricante, i);
+            RegistrarUf(uf, i);
             marca_registrada++;
         }
         i++;
@@ -112,22 +115,14 @@ int le_valida_marca(FABRICANTE *fabricante)
     return marca_registrada;
 }
 
-void ImprimeMarca(int marca_registrada, FABRICANTE *fabricante)
-{ // CHAMADA NA MAIN -> ImprimeMarca(qtd_marcas, fabricante);
-    for (int i = 0; i < marca_registrada; i++)
-    {
-        printf("fabricante[%d].nome_marca = %s\n", i, (*(fabricante + i)).nome_marca);
-    }
-}
-
-void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
+void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf)
 {
     int i = 0;
 
     for (i = 0; i < marca_registrada; i++)
     {
-        int posicao_nome = 0;
-
+        int posicao_nome = 0; //##
+        int posicao_DigTelefone=0; //##
         if (i == 0)
         {
             printf("-----------------+----------------------------------+------------------+--------\n"); // quebra linha entre uma marca e outra
@@ -138,10 +133,12 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
         }
         fabricante[i].qtd_carac_nome = strlen(fabricante[i].nome_marca);
         fabricante[i].qtd_carac_site = strlen(fabricante[i].site);
+        fabricante[i].qtd_carac_telefone = strlen(fabricante[i].telefone);
         if (fabricante[i].qtd_carac_nome > 16)
         { // impressao nome da marca com 2 linhas
 
-            int posicao_site = 0;
+            int posicao_site = 0; //##
+            
             while (posicao_nome < 17)
             {
                 printf("%c", (*(fabricante + i)).nome_marca[posicao_nome]);
@@ -164,13 +161,26 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
                     if (posicao_site == 33)
                     {
                         printf("| ");
-                        printf(" %[^\n]s",fabricante[i].telefone); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+                        // ==== INICIO TABELA - TELEFONE =====
+                        
+                        while(posicao_DigTelefone< fabricante[i].qtd_carac_telefone){
+                            printf("%c", (*(fabricante + i)).telefone[posicao_DigTelefone]);
+                            posicao_DigTelefone++;
+                        }
+                        while(posicao_DigTelefone<17){
+                            printf(" ");
+                            posicao_DigTelefone++;
+                        }
+                        if(posicao_DigTelefone==17){
+                            printf("| ");
+                            printf("%s", uf[i].nome); // TABELA - UF
+                        }
+                        /*===========FINAL TABELA - TELEFONE===========*/
                         printf("\n\t\t | ");
                         printf("%c", (*(fabricante + i)).site[posicao_site]);
                         posicao_site++;
                     }
-
+                    // JUKYFGIYTSAADAAS DASAS ASD AD ASD AD ASD ASSAD DSD WEWEQDS D
                     while (posicao_site > 33 && posicao_site <= fabricante[i].qtd_carac_site)
                     {
                         printf("%c", (*(fabricante + i)).site[posicao_site]);
@@ -186,6 +196,14 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
                         printf("| ");
 
                         //@@@@@@@@@@@@@@
+                    }
+                    while (posicao_site < 84)
+                    {
+                        printf(" ");
+                        posicao_site++;
+                    }
+                    if(posicao_site==84){
+                        printf("| ");
                     }
                     
                 }
@@ -206,7 +224,23 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
                     {
                         printf(" | ");
                     }
-                    printf(" %[^\n]s",fabricante[i].telefone); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    // ==== INICIO TABELA - TELEFONE =====
+                        
+                    while(posicao_DigTelefone< fabricante[i].qtd_carac_telefone){
+                        printf("%c", (*(fabricante + i)).telefone[posicao_DigTelefone]);
+                        posicao_DigTelefone++;
+                    }
+                    while(posicao_DigTelefone<17){
+                        printf(" ");
+                        posicao_DigTelefone++;
+                    } //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if(posicao_DigTelefone==17){
+                        printf("| ");
+                        printf("%s", uf[i].nome); // TABELA - UF
+                    }
+                    /*===========FINAL TABELA - TELEFONE===========*/ 
+                    
+                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 }
 
                 /*======================================*/
@@ -240,6 +274,14 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
             if(posicao_nome ==67){
                 printf("| ");
             }
+            while (posicao_nome < 84)
+            {
+                printf(" ");
+                posicao_nome++;
+            }
+            if(posicao_nome==84){
+                printf("| ");
+            }
         }
         else // impressao de nome de marcas de 1 linha
         {
@@ -264,7 +306,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
                 { // impressao do fabricante com 2 linhas
 
                     while (posicao_site < 33)
-                    {                                                         // 52 - 19 = 33
+                    {                                                        
                         printf("%c", (*(fabricante + i)).site[posicao_site]); // @@@@@@@@@@@@@@@@@@@@@@@@@
                         posicao_site++;
                     }
@@ -272,7 +314,24 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
                     if (posicao_site == 33)
                     {
                         printf("| ");
-                        printf(" %[^\n]s",fabricante[i].telefone);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        // ==== INICIO TABELA - TELEFONE =====
+                        if(fabricante[i].qtd_carac_telefone<18){
+                            while(posicao_DigTelefone< fabricante[i].qtd_carac_telefone){
+                                printf("%c", (*(fabricante + i)).telefone[posicao_DigTelefone]);
+                                posicao_DigTelefone++;
+                            }
+                            while(posicao_DigTelefone<17){
+                                printf(" ");
+                                posicao_DigTelefone++;
+                            } //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            if(posicao_DigTelefone==17){
+                                printf("| ");
+                                printf("%s", uf[i].nome); // TABELA - UF
+                            }
+                        }
+                        /*===========FINAL TABELA - TELEFONE===========*/
+                        
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         
                         printf("\n\t\t | ");
                         printf("%c", (*(fabricante + i)).site[posicao_site]);
@@ -295,6 +354,14 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
 
                         //@@@@@@@@@@@@@@
                     }
+                    while (posicao_site < 84)
+                    {
+                        printf(" ");
+                        posicao_site++;
+                    }
+                    if(posicao_site==84){
+                        printf("| ");
+                    }
                 }
                 else
                 { // impressao do fabricante com 1 linha
@@ -313,7 +380,22 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada)
                     {
                         printf(" | ");
                     }
-                    printf(" %[^\n]s",fabricante[i].telefone);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    // ==== INICIO TABELA - TELEFONE =====
+                        
+                        while(posicao_DigTelefone< fabricante[i].qtd_carac_telefone){
+                            printf("%c", (*(fabricante + i)).telefone[posicao_DigTelefone]);
+                            posicao_DigTelefone++;
+                        }
+                        while(posicao_DigTelefone<17){
+                            printf(" ");
+                            posicao_DigTelefone++;
+                        } //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        if(posicao_DigTelefone==17){
+                            printf("| ");
+                            printf("%s", uf[i].nome); // TABELA - UF
+                        }
+                        /*===========FINAL TABELA - TELEFONE===========*/
+                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     
                 }
             }
@@ -349,8 +431,8 @@ void ValorCompraProduto(PRODUTO* produto, int i){
 }
 /*-----------------------------------------------------------------------*/
 
-
-void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada)
+/*------------------------------- OUTPUT --------------------------------*/
+void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF* uf)
 {
     
 
@@ -365,7 +447,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada)
     printf("     MARCA       |               SITE               |     TELEFONE     |   UF   \n");
     
     
-    nome__marca_compactado(fabricante, marca_registrada); //... nao eh eficiente.... irei fazer por matrizes
+    nome__marca_compactado(fabricante, marca_registrada, uf); //... nao eh eficiente.... irei fazer por matrizes
     
 }
 
