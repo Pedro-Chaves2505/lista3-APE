@@ -33,7 +33,8 @@ void RegistrarTelefone(FABRICANTE *fabricante, int i);
 void RegistrarUf(UF *uf, int i);
 int le_valida_marca(FABRICANTE *fabricante, UF*uf);
 
-void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf);
+void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf); // pode ser retirado..está inseridos dentro do procedimento EstruturaTabela 
+void nome_produto_compactado(PRODUTO* produto, int produto_registrado, UF* uf); // pode ser retirado.." " " "...
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, UF* uf,PRODUTO* produto, int produto_registrado);
 
 
