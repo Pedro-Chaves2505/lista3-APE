@@ -414,38 +414,34 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada,UF *uf)
 
 /*-----------------------------------------------------------------------*/
 /*--------------------------- [2]LISTAR TODOS OS PRODUTOS -----------------*/
-
+//      REGISTRO DOS DADOS
 void DescricaoProduto(PRODUTO* produto, int i){
     printf("\n\t%do PRODUTO\n",i+1);
     printf("Informe a descricao:\n> ");
     scanf(" %[^\n]s", (*(produto+i)).descricao);
     // validacao
 }
-
 void PesoProduto(PRODUTO* produto,int i){
     printf("Infome o peso(KG):\n> ");
     scanf("%f", &produto[i].peso);
 
 }
-
 void ValorVendaProduto(PRODUTO* produto, int i){
     printf("Informe o valor de venda(R$):\n> ");
     scanf("%f", &produto[i].valor_venda);
     // validação
 }
-
 void ValorCompraProduto(PRODUTO* produto, int i){
     printf("Informe o valor de compra(R$):\n> ");
     scanf("%f", &produto[i].valor_compra);
     // validação
 }
-
+//--------------------------------------------------
 float ValorDeLucro(PRODUTO* produto, int i){
     float ValorLucro;
     ValorLucro = produto[i].valor_venda - produto[i].valor_compra;
     return ValorLucro;
 }
-
 float ValorPercentualLucro(PRODUTO* produto, int i, float ValorLucro){
     float PercentualLucro;
     PercentualLucro = (ValorDeLucro(produto, i) / produto[i].valor_venda) * 100;
