@@ -21,7 +21,7 @@ typedef struct
     char nome_marca[34], site[50], telefone[18];
     int id_uf;
     int id_fabricante;
-    int qtd_carac_nome, qtd_carac_site, qtd_carac_telefone; // incrementos
+    int qtd_carac_nome, qtd_carac_site, qtd_carac_telefone;
 } FABRICANTE;
 
 typedef struct
@@ -52,6 +52,7 @@ void calcula_percentuais_de_lucro(PRODUTO produtos[], int quantidade_de_produtos
 void ord_crescente_percentual_de_lucro(PRODUTO produtos[], int quantidade_de_produtos, int ids_percent_lucro_crescente[]);
 void ord_crescente_lucro(PRODUTO produtos[], int ids_lucro_crescente[], int quantidade_de_produtos);
 void ord_crescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[], int quantidade_de_produtos);
+void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[], int quantidade_de_produtos);
 void copiar_vet(int vet1[], int vet2[], int tam);
 
 int main()
@@ -78,10 +79,11 @@ int main()
         case 0:
             break;
         case 1:
-            // retirar esta tabela da funcao p/ fazer separada ... talvez não seje bom trabalhar duas tabelas em uma única função
-            EstruturaTabela(fabricante, qtd_marcas, ids_lucro_crescente/*não faz nada*/, uf, produto, qtd_marcas, ans);//teste
+
+            EstruturaTabela(fabricante, qtd_marcas, ids_lucro_crescente/*não faz nada*/, uf, produto, qtd_marcas, ans);//teste, ajustar esse id
             break;
         case 2:
+            ord_decrescente_valor_venda(&produto[0], ids_pvenda_crescente, qtd_produtos);
             EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente/*não faz nada*/, uf, produto, qtd_produtos, ans); // teste
             break;
         case 7:
@@ -103,7 +105,6 @@ int main()
 
     } while (ans != 0);
 
-    // EstruturaTabela(fabricante, qtd_marcas, ids_percent_lucro_crescente, uf, produto, qtd_produtos);
 
     return 0;
 }
@@ -191,8 +192,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
         fabricante[i].qtd_carac_site = strlen(fabricante[i].site);
         fabricante[i].qtd_carac_telefone = strlen(fabricante[i].telefone);
         if (fabricante[i].qtd_carac_nome > 16)
-        { // impressao nome da marca com 2 linhas
-
+        { // impressao - nome da marca com 2 linhas //##@
             int posicao_site = 0; // ##
 
             while (posicao_nome < 17)
@@ -204,9 +204,9 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
             if (posicao_nome == 17)
             {
                 printf("| ");
-                // inserir as expressões pro site quando o nome da marca ocupar 2 linhas
+
                 if (fabricante[i].qtd_carac_site > 33)
-                { // impressao do fabricante com 2 linhas
+                { // impressao - fabricante com 2 linhas e nome da marca com 2 linhas
 
                     while (posicao_site < 33) // 52 - 19 = 33
                     {
@@ -267,7 +267,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                     }
                 }
                 else
-                { // impressao do fabricante com 1 linha
+                { // impressao - fabricante com 1 linha e nome da marca com 2 linhas
 
                     while (posicao_site <= fabricante[i].qtd_carac_site)
                     {
@@ -294,7 +294,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                     {
                         printf(" ");
                         posicao_DigTelefone++;
-                    } //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    } 
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
@@ -307,10 +307,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
 
                 /*======================================*/
                 printf("\n");
-                // while(posicao_site<33){ // 52 - 19 = 33
-                //     printf("%c", (*(fabricante + i)).site[posicao_site]); // @@@@@@@@@@@@@@@@@@@@@@@@@
-                //     posicao_site++;
-                // }
+                
                 printf("%c", (*(fabricante + i)).nome_marca[posicao_nome]);
                 posicao_nome++;
             }
@@ -348,7 +345,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                 printf("| ");
             }
         }
-        else // impressao de nome de marcas de 1 linha
+        else // impressao de nome da marca com 1 linha //##@
         {
             // if (fabricante[i].qtd_carac_nome <= 16){
             // printf(" %s", (*(fabricante + i)).nome_marca);
@@ -368,7 +365,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                 printf("| ");
                 int posicao_site = 0; // 19 --> 0
                 if (fabricante[i].qtd_carac_site > 33)
-                { // impressao do fabricante com 2 linhas
+                { // impressao do fabricante com 2 linhas e nome da marca com 1 linha
 
                     while (posicao_site < 33)
                     {
@@ -391,7 +388,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                             {
                                 printf(" ");
                                 posicao_DigTelefone++;
-                            } //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            } 
                             if (posicao_DigTelefone == 17)
                             {
                                 printf("| ");
@@ -434,7 +431,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                     }
                 }
                 else
-                { // impressao do fabricante com 1 linha
+                { // impressao do fabricante com 1 linha e nome da marca com 1 linha
 
                     while (posicao_site <= fabricante[i].qtd_carac_site)
                     {
@@ -461,7 +458,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                     {
                         printf(" ");
                         posicao_DigTelefone++;
-                    } //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    } 
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
@@ -666,10 +663,8 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             ContPosicao++;
         }
 
-        printf("%s", produto[ids_produtos[i]].descricao); // alterar para -->imprimir caracter por caracter se a descricao for maior que 25
+        printf("%s", produto[ids_produtos[i]].descricao);
 
-        // printf("%.2f\t%.2f\t%.2f\n",produto[i].valor_compra, produto[i].valor_venda,VetLucro[i]);
-        // printf("%.2f\t%.2f",produto[i].peso, produto[i].valor_venda, produto[i].valor_compra);
     }
 }
 /*-----------------------------------------------------------------------*/
@@ -679,11 +674,9 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
 {
     char cabecalhoFabricante[82] ={"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
     char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |   UF    |          DESCRICAO                "};
-    char relatorio[10][80] = {"","Lista de todas as marcas","Lista de todos os produtos","Listar os produtos de um determinado estado","Listar os produtos de uma determinada marca","Apresentar o(s) estado(s) onde esta(ao) registrado o produto mais caro","Apresentar o(s) fabricante(s) que está registrado o produto mais barato","Listar todos os produtos em ordem crescente de valor-venda","Listar todos os produtos em ordem crescente de maior 'valor de lucro'","Listar todos os produtos em ordem crescente de maior 'percentual de lucro'"};
+    char relatorio[10][80] = {"","Lista de todas as marcas","Lista de todos os produtos","Listar os produtos de um determinado estado","Listar os produtos de uma determinada marca","Apresentar o(s) estado(s) onde esta(ao) registrado o produto mais caro","Apresentar o(s) fabricante(s) que está registrado o produto mais barato","Listar todos os produtos em ordem crescente de valor-venda","Listar todos os produtos em ordem crescente de lucro","Listar todos os produtos em ordem crescente de percentual de lucro"};
     
-
-
-    // se o usuario selecionar a opção 1,6 do menu principal imprime esta tabela
+    // opção 1,6 do menu principal imprime esta tabela
     if(ans== 1 || ans== 6){
         system("clear");//linux
         system("cls");//windows
@@ -694,7 +687,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
         printf("%s\n",cabecalhoFabricante);
         nome__marca_compactado(fabricante, marca_registrada, ids_produtos,uf);
     }
-    // se o usuario selecionar a opção 2,3,4,5,7,8,9 do menu principal imprime esta tabela{
+    // opção 2,3,4,5,7,8,9 do menu principal imprime esta tabela{
     else{
         system("clear");//linux
         system("cls");//windows
@@ -736,7 +729,7 @@ void ord_crescente_percentual_de_lucro(PRODUTO produtos[], int quantidade_de_pro
     int k = 0, b = 0, i = 0, aux = 0, ids_ordenados[50] = {};
 
     // colocando todos os ids de produtos que foram trazidos - ver se transforma isso em função
-    for (i = 1; i < quantidade_de_produtos; i++)
+    for (i = 0; i < quantidade_de_produtos; i++)
     {
         ids_ordenados[i] = i;
     }
@@ -816,6 +809,36 @@ void ord_crescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[], i
     // usa o array de ids para imprmir
     copiar_vet(ids_pvenda_crescente, ids_ordenados, quantidade_de_produtos);
     printf("\nOrdem crescente de valor de venda.\n");
+}
+
+void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[], int quantidade_de_produtos)
+{
+    /*Um comentário é que estou pensando em retornar os ids aqui*/
+    // ordena e armazena em array
+    int k = 0, b = 0, i = 0, aux, ids_ordenados[50] = {};
+
+    // colocando todos os ids de produtos que foram trazidos
+    for (i = 0; i < quantidade_de_produtos; i++)
+    {
+        ids_ordenados[i] = i;
+    }
+
+    // ordenando somente os ids
+    for (k = quantidade_de_produtos - 1; k > 0; k--)
+    {
+        for (b = 0; b < k; b++)
+        {
+            if ((*(produtos + ids_ordenados[b])).valor_venda < (*(produtos + ids_ordenados[b + 1])).valor_venda) // alterado o sinal para manter uma ordem descrescente
+            {
+                aux = ids_ordenados[b];
+                ids_ordenados[b] = ids_ordenados[b + 1];
+                ids_ordenados[b + 1] = aux;
+            }
+        }
+    }
+    // usa o array de ids para imprmir
+    copiar_vet(ids_pvenda_crescente, ids_ordenados, quantidade_de_produtos);
+    printf("\nOrdem decrescente de valor de venda.\n");
 }
 
 void copiar_vet(int vet1[], int vet2[], int tam)
