@@ -677,15 +677,19 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 /*------------------------------- OUTPUT --------------------------------*/
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans)
 {
-    char cabecalhoFabricante[80] = "     MARCA       |               SITE               |     TELEFONE     |   UF   ";
-    char cabecalhoProduto[] = "   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |   UF    |          DESCRICAO                ";
+    char cabecalhoFabricante[82] ={"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
+    char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |   UF    |          DESCRICAO                "};
+    char relatorio[10][80] = {"","Lista de todas as marcas","Lista de todos os produtos","Listar os produtos de um determinado estado","Listar os produtos de uma determinada marca","Apresentar o(s) estado(s) onde esta(ao) registrado o produto mais caro","Apresentar o(s) fabricante(s) que está registrado o produto mais barato","Listar todos os produtos em ordem crescente de valor-venda","Listar todos os produtos em ordem crescente de maior 'valor de lucro'","Listar todos os produtos em ordem crescente de maior 'percentual de lucro'"};
+    
+
 
     // se o usuario selecionar a opção 1,6 do menu principal imprime esta tabela
     if(ans== 1 || ans== 6){
         system("clear");//linux
         system("cls");//windows
+
         printf("\n================================================================================\n");
-        printf("                          RELATORIO 1 - LISTA DE TODAS AS MARCAS                ");
+        printf("                          RELATORIO %d -  %s               ",ans,relatorio[ans]);
         printf("\n================================================================================\n");
         printf("%s\n",cabecalhoFabricante);
         nome__marca_compactado(fabricante, marca_registrada, ids_produtos,uf);
@@ -695,7 +699,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
         system("clear");//linux
         system("cls");//windows
         printf("\n==========================================================================================================================\n");
-        printf("                                         RELATORIO 2 - LISTA DE TODOS OS PRODUTOS                                             ");
+        printf("                          RELATORIO %d - %s                                                                              ",ans,relatorio[ans]);
         printf("\n==========================================================================================================================\n");
         printf("%s\n", cabecalhoProduto);
         nome_produto_compactado(produto, produto_registrado, ids_produtos, uf);
