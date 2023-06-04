@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "le_valida.c"
 #include <string.h>
+#include <stdlib.h>
 #define MIN_PRODUTO 3
 #define MAX_PRODUTO 50
 #define MIN_FABRICANTE 2
@@ -36,7 +37,7 @@ void RegistrarUf(UF *uf, int i);
 int le_valida_marca(FABRICANTE *fabricante, UF *uf);
 
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf);
-void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado);
+void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans);
 
 void DescricaoProduto(PRODUTO *produto, int i);
 void ValorVendaProduto(PRODUTO *produto, int i);
@@ -60,7 +61,7 @@ int main()
     UF uf[27];
     int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, ids_percent_lucro_crescente[50] = {}, ids_lucro_crescente[50] = {}, ids_pvenda_crescente[50] = {}, ids_top_mais_caros[50] = {}, ids_top_mais_baratos[50] = {};
 
-    // qtd_marcas = le_valida_marca(fabricante, uf);
+    qtd_marcas = le_valida_marca(fabricante, uf);
     qtd_produtos = le_valida_produto(produto, uf);
 
     calcula_lucro(&produto[0], qtd_produtos);
@@ -69,29 +70,31 @@ int main()
     do
     {
         printf("\n\nDigite a opcao desejada: \n\n");
-        printf("\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro \n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[0] sair\n\n> ");
+        
+        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro \n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[0] sair\n\n> ");
         scanf("%d", &ans);
         switch (ans)
         {
         case 0:
             break;
         case 1:
-            le_valida_marca(fabricante, uf); // separar a leitura e validação da impressão
+            // retirar esta tabela da funcao p/ fazer separada ... talvez não seje bom trabalhar duas tabelas em uma única função
+            EstruturaTabela(fabricante, qtd_marcas, ids_lucro_crescente/*não faz nada*/, uf, produto, qtd_marcas, ans);//teste
             break;
         case 2:
-            le_valida_produto(produto, uf); // separar a leitura e validação da impressão
+            EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente/*não faz nada*/, uf, produto, qtd_produtos, ans); // teste
             break;
         case 7:
             ord_crescente_valor_venda(&produto[0], ids_pvenda_crescente, qtd_produtos);
-            EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente, uf, produto, qtd_produtos);
+            EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente, uf, produto, qtd_produtos, ans);
             break;
         case 8:
             ord_crescente_lucro(&produto[0], ids_lucro_crescente, qtd_produtos);
-            EstruturaTabela(fabricante, qtd_marcas, ids_lucro_crescente, uf, produto, qtd_produtos);
+            EstruturaTabela(fabricante, qtd_marcas, ids_lucro_crescente, uf, produto, qtd_produtos, ans);
             break;
         case 9:
             ord_crescente_percentual_de_lucro(&produto[0], qtd_produtos, ids_percent_lucro_crescente);
-            EstruturaTabela(fabricante, qtd_marcas, ids_percent_lucro_crescente, uf, produto, qtd_produtos);
+            EstruturaTabela(fabricante, qtd_marcas, ids_percent_lucro_crescente, uf, produto, qtd_produtos, ans);
             break;
         default:
             printf("Essa nao e uma opcao valida!\n");
@@ -108,8 +111,8 @@ int main()
 /*--------------------------- [1]LISTAR TODAS AS MARCAS -----------------*/
 void RegistrarMarca(FABRICANTE *fabricante, int i)
 { // PRIMEIRA ALTERACAO
-
-    printf("Informe o nome da %da marca:\n> ", i + 1);
+    printf("\t%da MARCA\n",i+1);
+    printf("Informe o nome da marca:\n> ");
     scanf(" %[^\n]s", (*(fabricante + i)).nome_marca);
 }
 
@@ -236,7 +239,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, int id
                         printf("%c", (*(fabricante + i)).site[posicao_site]);
                         posicao_site++;
                     }
-                    // JUKYFGIYTSAADAAS DASAS ASD AD ASD AD ASD ASSAD DSD WEWEQDS D
+
                     while (posicao_site > 33 && posicao_site <= fabricante[i].qtd_carac_site)
                     {
                         printf("%c", (*(fabricante + i)).site[posicao_site]);
@@ -672,29 +675,31 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 /*-----------------------------------------------------------------------*/
 
 /*------------------------------- OUTPUT --------------------------------*/
-void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado)
+void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans)
 {
     char cabecalhoFabricante[80] = "     MARCA       |               SITE               |     TELEFONE     |   UF   ";
     char cabecalhoProduto[] = "   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |   UF    |          DESCRICAO                ";
 
-    // se o usuario selecionar a opção 1,6 do menu principal imprime esta tabela{
-
-    /*
-    printf("\n================================================================================\n");
-    printf("                          RELATORIO 1 - LISTA DE TODAS AS MARCAS                ");
-    printf("\n================================================================================\n");
-    printf("%s\n",cabecalhoFabricante);
-    nome__marca_compactado(fabricante, marca_registrada, uf);
-    */
-
-    //}
-
+    // se o usuario selecionar a opção 1,6 do menu principal imprime esta tabela
+    if(ans== 1 || ans== 6){
+        system("clear");//linux
+        system("cls");//windows
+        printf("\n================================================================================\n");
+        printf("                          RELATORIO 1 - LISTA DE TODAS AS MARCAS                ");
+        printf("\n================================================================================\n");
+        printf("%s\n",cabecalhoFabricante);
+        nome__marca_compactado(fabricante, marca_registrada, ids_produtos,uf);
+    }
     // se o usuario selecionar a opção 2,3,4,5,7,8,9 do menu principal imprime esta tabela{
-    printf("\n==========================================================================================================================\n");
-    printf("                                         RELATORIO 2 - LISTA DE TODOS OS PRODUTOS                                             ");
-    printf("\n==========================================================================================================================\n");
-    printf("%s\n", cabecalhoProduto);
-    nome_produto_compactado(produto, produto_registrado, ids_produtos, uf);
+    else{
+        system("clear");//linux
+        system("cls");//windows
+        printf("\n==========================================================================================================================\n");
+        printf("                                         RELATORIO 2 - LISTA DE TODOS OS PRODUTOS                                             ");
+        printf("\n==========================================================================================================================\n");
+        printf("%s\n", cabecalhoProduto);
+        nome_produto_compactado(produto, produto_registrado, ids_produtos, uf);
+    }
 }
 
 void calcula_lucro(PRODUTO produtos[], int quantidade_de_produtos)
