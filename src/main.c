@@ -143,6 +143,7 @@ void RegistrarUf(UF *uf, int i)
     printf("Selecione uma UF:\n> ");
     scanf(" %[^\n]s", (*(uf + i)).nome); // apenas para testes
     // validacao - menu com as UF jah definidas
+    (*(uf + i)).id_uf = i;
 }
 
 int le_valida_marca(FABRICANTE *fabricante, UF *uf)
