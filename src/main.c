@@ -565,33 +565,36 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 
         if (i == 0)
         {
-            printf("-----------+-----------------+-----------------+----------------+--------------------+---------+-------------------------\n");
+            printf("-----------+-----------------+-----------------+-----------------+-----------------+---------+-------------------------\n");
         }
         else
         {
-            printf("\n-----------+-----------------+-----------------+----------------+--------------------+---------+-------------------------\n");
+            printf("\n-----------+-----------------+-----------------+-----------------+-----------------+---------+-------------------------\n");
         }
 
-        /*Descobrindo a quantidade de posicoes que tem em cada digito*/
-        // futuramente passar para funcao
-        int posicoesPeso;   // quantidade de digitos
+        /*OBJ: Descobrir a quantidade de digitos que tem em cada valor sem precisa alterar a sua "TIPAGEM padrão"*/
+
         PRODUTO stringPeso; // representacao do numero como string
         sprintf(stringPeso.digitosPeso, "%.2f", produto[ids_produtos[i]].peso);
-        posicoesPeso = strlen(stringPeso.digitosPeso); // numero de digitos no produto[i].peso
-        //-------------------------------
+        int posicoesPeso = strlen(stringPeso.digitosPeso); // numero de digitos do produto[i].peso
 
         PRODUTO stringValorVenda;
         sprintf(stringValorVenda.dig_V_Venda, "%.2f", produto[ids_produtos[i]].valor_venda);
-        int posicoesValorVenda = strlen(stringValorVenda.dig_V_Venda); // numero de digitos no produto[i].valor_venda
+        int posicoesValorVenda = strlen(stringValorVenda.dig_V_Venda); // numero de digitos do produto[i].valor_venda
+
+        PRODUTO stringValorCompra;
+        sprintf(stringValorCompra.dig_V_Compra, "%.2f", produto[ids_produtos[i]].valor_compra);
+        int posicoesValorCompra = strlen(stringValorCompra.dig_V_Compra); // numero de digitos do produto[i].valor_compra
 
         PRODUTO stringValorLucro;
-        sprintf(stringValorLucro.dig_V_lucro, "%.2f", VetLucro[ids_produtos[i]]);
-        int posicoesValorLucro = strlen(stringValorLucro.dig_V_lucro);
+        sprintf(stringValorLucro.dig_V_lucro, "%.2f", produto[ids_produtos[i]].lucro);
+        int posicoesValorLucro = strlen(stringValorLucro.dig_V_lucro); // numero de digitos do produto[i].lucro
 
         PRODUTO stringPercentualLucro;
-        sprintf(stringPercentualLucro.dig_P_lucro, "%.2f", VetPercLucro[ids_produtos[i]]);
-        int posicoesPercLucro = strlen(stringPercentualLucro.dig_P_lucro);
-        /*==========================================================*/
+        sprintf(stringPercentualLucro.dig_P_lucro, "%.2f", produto[ids_produtos[i]].porcentagem_de_lucro);
+        int posicoesPercLucro = strlen(stringPercentualLucro.dig_P_lucro); // numero de digitos do produto[i].porcentagem_de_lucro
+
+        /*=================================================================================================*/
         printf("%.2f KG", produto[ids_produtos[i]].peso);
 
         ContPosicao = posicoesPeso;
@@ -606,11 +609,12 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
         }
         printf("R$ %.2f", produto[ids_produtos[i]].valor_venda);
 
+        ContPosicao=0;
         ContPosicao += posicoesValorVenda;
-        while (ContPosicao < 21)
+        while (ContPosicao < 13)
         {
             printf(" ");
-            if (ContPosicao == 20)
+            if (ContPosicao == 12)
             {
                 printf("| ");
             }
@@ -618,11 +622,12 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
         }
         printf("R$ %.2f", produto[ids_produtos[i]].valor_compra);
 
-        ContPosicao += posicoesValorLucro;
-        while (ContPosicao < 34)
+        ContPosicao=0;
+        ContPosicao += posicoesValorCompra;
+        while (ContPosicao < 13)
         {
             printf(" ");
-            if (ContPosicao == 33)
+            if (ContPosicao == 12)
             {
                 printf("| ");
             }
@@ -630,40 +635,45 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
         }
         printf("R$ %.2f", produto[ids_produtos[i]].lucro);
 
-        ContPosicao += posicoesPercLucro;
-        while (ContPosicao < 47)
+        ContPosicao=0;
+        ContPosicao += posicoesValorLucro;
+        while (ContPosicao < 13)
         {
             printf(" ");
-            if (ContPosicao == 46)
+            if (ContPosicao == 12)
             {
-                printf("|     ");
+                printf("| ");
             }
             ContPosicao++;
         }
         printf("%.2f %%", produto[ids_produtos[i]].porcentagem_de_lucro);
 
-        while (ContPosicao < 55)
+        ContPosicao=0;
+        ContPosicao += posicoesPercLucro;
+        while (ContPosicao < 15)
         {
             printf(" ");
-            if (ContPosicao == 54)
+            if (ContPosicao == 13)
             {
-                printf("|  ");
+                printf("| ");
             }
             ContPosicao++;
         }
         printf(" %s", uf[ids_produtos[i]].nome);
-
-        while (ContPosicao < 59)
+        
+        ContPosicao=0;
+        ContPosicao+= 2; // todas uf possuem apenas 2letras.
+        while (ContPosicao < 6)
         {
             printf(" ");
-            if (ContPosicao == 58)
+            if (ContPosicao == 5)
             {
                 printf("| ");
             }
             ContPosicao++;
         }
 
-        printf("%s", produto[ids_produtos[i]].descricao);
+        printf(" %s", produto[ids_produtos[i]].descricao);
 
     }
 }
@@ -673,7 +683,7 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans)
 {
     char cabecalhoFabricante[82] ={"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
-    char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO  |  PERCENTUAL-LUCRO  |   UF    |          DESCRICAO                "};
+    char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |   UF    |          DESCRICAO                "};
     char relatorio[10][80] = {"","Lista de todas as marcas","Lista de todos os produtos","Listar os produtos de um determinado estado","Listar os produtos de uma determinada marca","Apresentar o(s) estado(s) onde esta(ao) registrado o produto mais caro","Apresentar o(s) fabricante(s) que está registrado o produto mais barato","Listar todos os produtos em ordem crescente de valor-venda","Listar todos os produtos em ordem crescente de lucro","Listar todos os produtos em ordem crescente de percentual de lucro"};
     
     // opção 1,6 do menu principal imprime esta tabela
