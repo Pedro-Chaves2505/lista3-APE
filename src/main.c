@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #define MIN_PRODUTO 3
 #define MAX_PRODUTO 50
-#define MIN_FABRICANTE 0
+#define MIN_FABRICANTE 2
 #define MAX_FABRICANTE 5
 
 typedef struct
@@ -43,9 +43,10 @@ void DescricaoProduto(PRODUTO *produto, int i);
 void ValorVendaProduto(PRODUTO *produto, int i);
 void ValorCompraProduto(PRODUTO *produto, int i);
 void PesoProduto(PRODUTO *produto, int i);
+int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *fabricante, int qtd_fabr);
 float ValorDeLucro(PRODUTO *produto, int i);
 float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro);
-int le_valida_produto(PRODUTO *produto, UF *uf);
+int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr);
 
 int pega_ufs_dos_prods_mais_caros(PRODUTO produtos[], int ids_top_mais_caros[], int quantidade_de_produtos);
 void calcula_lucro(PRODUTO produtos[], int quantidade_de_produtos);
@@ -67,7 +68,7 @@ int main()
     int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, ids_percent_lucro_crescente[50] = {}, ids_lucro_crescente[50] = {}, ids_pvenda_crescente[50] = {}, ids_top_mais_caros[50] = {}, ids_top_mais_baratos[50] = {};
 
     qtd_marcas = le_valida_marca(fabricante, uf);
-    qtd_produtos = le_valida_produto(produto, uf);
+    qtd_produtos = le_valida_produto(produto, uf, fabricante, qtd_marcas);
 
     calcula_lucro(&produto[0], qtd_produtos);
     calcula_percentuais_de_lucro(&produto[0], qtd_produtos);
@@ -76,7 +77,7 @@ int main()
     {
         printf("\n\nDigite a opcao desejada: \n\n");
 
-        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[6] Listar os estados dos produtos mais caros\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro \n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[0] sair\n\n> ");
+        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[5] Listar os estados dos produtos mais caros\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro \n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[0] sair\n\n> ");
         scanf("%d", &ans);
         switch (ans)
         {
@@ -525,7 +526,21 @@ float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro)
 
     return PercentualLucro;
 }
-int le_valida_produto(PRODUTO *produto, UF *uf)
+
+int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *fabricante, int qtd_fabr)
+{
+    int id_fabr = 0;
+    imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
+
+    scanf("%d", &id_fabr);
+
+    (*(produto + produto_registrado)).id_fabricante = id_fabr;
+
+    return id_fabr;
+}
+
+int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
+// CHAMADA NA MAIN --> qtd_produtos = le_valida_produto(produto, uf);
 { // CHAMADA NA MAIN --> qtd_produtos = le_valida_produto(produto, uf);
     int produto_registrado = 0;
     char confirm;
@@ -537,6 +552,7 @@ int le_valida_produto(PRODUTO *produto, UF *uf)
         ValorCompraProduto(produto, produto_registrado);
         ValorVendaProduto(produto, produto_registrado);
         RegistrarUf(uf, produto_registrado);
+        associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
         produto_registrado++;
     }
 
@@ -552,6 +568,7 @@ int le_valida_produto(PRODUTO *produto, UF *uf)
             ValorCompraProduto(produto, produto_registrado);
             ValorVendaProduto(produto, produto_registrado);
             RegistrarUf(uf, produto_registrado);
+            associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
             produto_registrado++;
         }
 
@@ -915,6 +932,18 @@ void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[],
     // usa o array de ids para imprmir
     copiar_vet(ids_pvenda_crescente, ids_ordenados, quantidade_de_produtos);
     printf("\nOrdem decrescente de valor de venda.\n");
+}
+
+void imprimir_idFabr_nomeFabr(FABRICANTE *fabricante, int qtd_fabr)
+{
+    int i = 0;
+    printf("Digite o fabricante do produto:\n\n");
+    for (i = 0; i < qtd_fabr; i++)
+    {
+        printf("[%d] %s", i, (*(fabricante + i)).nome_marca);
+        printf("\n");
+    }
+    printf("\n> ");
 }
 
 void copiar_vet(int vet1[], int vet2[], int tam)
