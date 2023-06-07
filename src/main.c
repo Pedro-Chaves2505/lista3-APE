@@ -33,7 +33,7 @@ typedef struct
 void RegistrarMarca(FABRICANTE *fabricante, int i);
 void RegistrarSite(FABRICANTE *fabricante, int i);
 void RegistrarTelefone(FABRICANTE *fabricante, int i);
-void RegistrarUf(UF *uf, int i);
+void receber_UF_fabricante(FABRICANTE *fabricante, int i);
 int le_valida_marca(FABRICANTE *fabricante, UF *uf);
 
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf, int ans);
@@ -49,15 +49,18 @@ float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro);
 int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr);
 void receber_id_uf(PRODUTO *para_onde_vai, int i);
 int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *fabricante, int qtd_fabr);
+void imprimir_idFabr_nomeFabr(FABRICANTE *fabricante, int qtd_fabr);
 
 int pega_ufs_dos_prods_mais_caros(PRODUTO produtos[], int ids_top_mais_caros[], int quantidade_de_produtos);
-pega_fabricantes_dos_prods_mais_baratos(PRODUTO produtos[], int ids_top_mais_baratos[], int quantidade_de_produtos);
+int pega_fabricantes_dos_prods_mais_baratos(PRODUTO produtos[], int ids_top_mais_baratos[], int quantidade_de_produtos);
 void calcula_lucro(PRODUTO produtos[], int quantidade_de_produtos);
 void calcula_percentuais_de_lucro(PRODUTO produtos[], int quantidade_de_produtos);
 void ord_crescente_percentual_de_lucro(PRODUTO produtos[], int quantidade_de_produtos, int ids_percent_lucro_crescente[]);
 void ord_crescente_lucro(PRODUTO produtos[], int ids_lucro_crescente[], int quantidade_de_produtos);
 void ord_crescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[], int quantidade_de_produtos);
 void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[], int quantidade_de_produtos);
+void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam);
+void list_prods_marca(PRODUTO *produtos, FABRICANTE *fabricantes, int tam);
 
 // Helpers
 void copiar_vet(int vet1[], int vet2[], int tam);
@@ -81,7 +84,7 @@ int main()
     {
         printf("\n\nDigite a opcao desejada: \n\n");
 
-        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[3] Listar os produtos vindos de um certo estado\n[5] Listar os estados dos produtos mais caros\n[6] Listar os fabricantes dos produtos mais baratos\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro\n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[0] sair\n\n> ");
+        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[3] Listar os produtos vindos de um certo estado\n[4] Listar os produtos vindos de uma certa marca\n[5] Listar os estados dos produtos mais caros\n[6] Listar os fabricantes dos produtos mais baratos\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro\n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[0] sair\n\n> ");
         scanf("%d", &ans);
         switch (ans)
         {
@@ -94,6 +97,13 @@ int main()
         case 2:
             ord_decrescente_valor_venda(&produto[0], ids_pvenda_crescente, qtd_produtos);
             EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente /*não faz nada*/, uf, produto, qtd_produtos, ans); // teste
+            break;
+        case 3:
+            list_prods_por_uf(produto, fabricante, qtd_produtos);
+            break;
+        case 4:
+            imprimir_idFabr_nomeFabr(fabricante, qtd_marcas);
+            list_prods_marca(produto, fabricante, qtd_produtos);
             break;
         case 5:
             qtd_top_mais_caros = pega_ufs_dos_prods_mais_caros(&produto[0], ids_top_mais_caros, qtd_produtos);
@@ -147,12 +157,38 @@ void RegistrarTelefone(FABRICANTE *fabricante, int i)
     // acrescentar a validação para o telefone
 }
 
-void RegistrarUf(UF *uf, int i)
+void receber_UF_fabricante(FABRICANTE *fabricante, int i)
 {
+    char ufs[27 /*nm_ufs*/][50] =
+        {" AC", " AL", " AP", " AM", " BA",
+         " CE", " DF", " ES", " GO", "MA",
+         "MT", "MS", "MG", "PA", "PB",
+         "PR", "PE", "PI", "RJ", "RN",
+         "RS", "RO", "RR", "SC", "SP",
+         "SE", "TO"};
+    int op = 0;
+    int count = 0;
+
+    // imprimindo as ufs em formato de tabela
+    for (int i = 0; i < 6 /*nm_linhas*/; i++)
+    {
+        for (int j = 0; j < 5 /*nm_colunas*/; j++)
+        {
+            if (count < 10 /*num_ufs*/)
+            {
+                printf("[%d]%-9s", count + 1, ufs[count]);
+            }
+            else if (count > 9 && count < 27)
+            {
+                printf("[%d]%-8s", count + 1, ufs[count]); // para um melhor alinhamento
+            }
+            count++;
+        }
+        printf("\n");
+    }
     printf("Selecione uma UF:\n> ");
-    scanf(" %[^\n]s", (*(uf + i)).nome); // apenas para testes
+    scanf("%d", &(*(fabricante + i)).id_uf); // apenas para testes
     // validacao - menu com as UF jah definidas
-    (*(uf + i)).id_uf = i;
 }
 
 int le_valida_marca(FABRICANTE *fabricante, UF *uf)
@@ -165,7 +201,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF *uf)
         RegistrarMarca(fabricante, marca_registrada);
         RegistrarSite(fabricante, marca_registrada);
         RegistrarTelefone(fabricante, marca_registrada);
-        RegistrarUf(uf, marca_registrada);
+        receber_UF_fabricante(fabricante, marca_registrada);
 
         marca_registrada++;
     }
@@ -180,7 +216,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF *uf)
             RegistrarMarca(fabricante, marca_registrada);
             RegistrarSite(fabricante, marca_registrada);
             RegistrarTelefone(fabricante, marca_registrada);
-            RegistrarUf(uf, marca_registrada);
+            receber_UF_fabricante(uf, marca_registrada);
             marca_registrada++;
         }
 
@@ -546,8 +582,8 @@ float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro)
 
     return PercentualLucro;
 }
-int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
 
+int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
 { // CHAMADA NA MAIN --> qtd_produtos = le_valida_produto(produto, uf);
     int produto_registrado = 0;
     char confirm;
@@ -558,7 +594,6 @@ int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_
         PesoProduto(produto, produto_registrado);
         ValorCompraProduto(produto, produto_registrado);
         ValorVendaProduto(produto, produto_registrado);
-        RegistrarUf(uf, produto_registrado);
         associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
         produto_registrado++;
     }
@@ -574,7 +609,6 @@ int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_
             PesoProduto(produto, produto_registrado);
             ValorCompraProduto(produto, produto_registrado);
             ValorVendaProduto(produto, produto_registrado);
-            RegistrarUf(uf, produto_registrado);
             associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
             produto_registrado++;
         }
@@ -1016,6 +1050,66 @@ void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[],
     // usa o array de ids para imprmir
     copiar_vet(ids_pvenda_crescente, ids_ordenados, quantidade_de_produtos);
     printf("\nOrdem decrescente de valor de venda.\n");
+}
+
+void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam)
+{
+    int i, idx_uf_pesquisada;
+    int j;
+    char uf_search[30];
+    char ufs[27][50] =
+        {"AC", "AL", "AP", "AM", "BA",
+         "CE", "DF", "ES", "GO", "MA",
+         "MT", "MS", "MG", "PA", "PB",
+         "PR", "PE", "PI", "RJ", "RN",
+         "RS", "RO", "RR", "SC", "SP",
+         "SE", "TO"};
+    int op = 0;
+    int count = 0;
+
+    // imprimindo as ufs em formato de tabela
+    for (int i = 0; i < 6 /*nm_linhas*/; i++)
+    {
+        for (int j = 0; j < 5 /*nm_colunas*/; j++)
+        {
+            if (count < 10 /*num_ufs*/)
+            {
+                printf("[%d]%-9s", count + 1, ufs[count]);
+            }
+            else if (count > 9 && count < 27)
+            {
+                printf("[%d]%-8s", count + 1, ufs[count]); // para um melhor alinhamento
+            }
+            count++;
+        }
+        printf("\n");
+    }
+    printf("digite a UF a ser pesquisada: ");
+    scanf("%d", &idx_uf_pesquisada);
+    printf("id| \tprodutos|\t UF\n");
+    for (i = 0; i < tam; i++)
+    {
+        if ((*(fabricantes + (*(produtos + i)).id_fabricante)).id_uf == idx_uf_pesquisada)
+        {
+            j++;
+            printf("%d\t%s|\t %s\n", (*(produtos + i)).id_produto, (*(produtos + i)).descricao, ufs[idx_uf_pesquisada]);
+        }
+    }
+}
+
+void list_prods_marca(PRODUTO *produtos, FABRICANTE *fabricantes, int tam)
+{
+    int i = 0, idx_fabr = 0;
+    printf("digite a marca a ser pesquisada: ");
+    scanf("%d", &idx_fabr);
+    printf("id| \tprodutos|\t marca\n");
+    for (i = 0; i < tam; i++)
+    {
+        if ((*(produtos + i)).id_fabricante == idx_fabr)
+        {
+            printf("%d\t%s|\t %s\n", (*(produtos + i)).id_produto, (*(produtos + i)).descricao, fabricantes[idx_fabr].nome_marca);
+        }
+    }
 }
 
 // Helpers
