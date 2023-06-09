@@ -6,13 +6,13 @@
 
 ## Índice 
 
-- [Projeto 3 (Lista Avaliativa 3)](#Projeto-3-(Lista-Avaliativa-3))
-- [Índice](#índice)
-- [Descrição do projeto](#descrição-do-projeto)
-- [Funcionalidades do projeto](#funcionalidades-do-projeto)
-- [Acesso ao projeto](#acesso-ao-projeto)
-- [Técnicas e tecnologias utilizadas](#️técnicas-e-tecnologias-utilizadas)
-- [Autores](#autores)
+- [Projeto 3 (Lista Avaliativa 3)](#projeto-3-lista-avaliativa-3)
+  - [Índice](#índice)
+  - [Descrição do projeto](#descrição-do-projeto)
+  - [:hammer: Funcionalidades do projeto](#hammer-funcionalidades-do-projeto)
+  - [📁 Acesso ao projeto](#-acesso-ao-projeto)
+  - [✔️ Técnicas e tecnologias utilizadas](#️-técnicas-e-tecnologias-utilizadas)
+  - [Autores](#autores)
 
 ## Descrição do projeto
 <div>
