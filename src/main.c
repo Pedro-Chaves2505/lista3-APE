@@ -33,7 +33,7 @@ typedef struct
 void RegistrarMarca(FABRICANTE *fabricante, int i);
 void RegistrarSite(FABRICANTE *fabricante, int i);
 void RegistrarTelefone(FABRICANTE *fabricante, int i);
-void receber_UF_fabricante(FABRICANTE *fabricante, int i);
+void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF*uf);
 int le_valida_marca(FABRICANTE *fabricante, UF *uf);
 
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf, int ans);
@@ -157,7 +157,7 @@ void RegistrarTelefone(FABRICANTE *fabricante, int i)
     // acrescentar a validação para o telefone
 }
 
-void receber_UF_fabricante(FABRICANTE *fabricante, int i)
+void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF*uf)
 {
     char ufs[27 /*nm_ufs*/][50] =
         {" AC", " AL", " AP", " AM", " BA",
@@ -176,11 +176,11 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i)
         {
             if (count < 10 /*num_ufs*/)
             {
-                printf("[%d]%-9s", count + 1, ufs[count]);
+                printf("[%d]%-9s", count, ufs[count]);
             }
             else if (count > 9 && count < 27)
             {
-                printf("[%d]%-8s", count + 1, ufs[count]); // para um melhor alinhamento
+                printf("[%d]%-8s", count, ufs[count]); // para um melhor alinhamento
             }
             count++;
         }
@@ -189,6 +189,9 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i)
     printf("Selecione uma UF:\n> ");
     scanf("%d", &(*(fabricante + i)).id_uf); // apenas para testes
     // validacao - menu com as UF jah definidas
+    if((*(fabricante+i)).id_uf>=0 && (*(fabricante+i)).id_uf<=26 ){
+        strcpy((*(uf + fabricante[i].id_uf)).nome, ufs[(*(fabricante+i)).id_uf]);
+    }
 }
 
 int le_valida_marca(FABRICANTE *fabricante, UF *uf)
@@ -201,7 +204,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF *uf)
         RegistrarMarca(fabricante, marca_registrada);
         RegistrarSite(fabricante, marca_registrada);
         RegistrarTelefone(fabricante, marca_registrada);
-        receber_UF_fabricante(fabricante, marca_registrada);
+        receber_UF_fabricante(fabricante, marca_registrada, uf);
 
         marca_registrada++;
     }
@@ -216,7 +219,7 @@ int le_valida_marca(FABRICANTE *fabricante, UF *uf)
             RegistrarMarca(fabricante, marca_registrada);
             RegistrarSite(fabricante, marca_registrada);
             RegistrarTelefone(fabricante, marca_registrada);
-            receber_UF_fabricante(uf, marca_registrada);
+            receber_UF_fabricante(fabricante, marca_registrada, uf);
             marca_registrada++;
         }
 
@@ -363,7 +366,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
-                        printf("%s", uf[ids_fabrs[i]].nome); // TABELA - UF
+                        printf("%s", uf[i].nome); // TABELA - UF
                     }
                     /*===========FINAL TABELA - TELEFONE===========*/
 
@@ -457,7 +460,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                             if (posicao_DigTelefone == 17)
                             {
                                 printf("| ");
-                                printf("%s", uf[ids_fabrs[i]].nome); // TABELA - UF
+                                printf("%s", uf[i].nome); // TABELA - UF
                             }
                         }
                         /*===========FINAL TABELA - TELEFONE===========*/
@@ -527,7 +530,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
-                        printf("%s", uf[ids_fabrs[i]].nome); // TABELA - UF
+                        printf("%s", uf[i].nome); // TABELA - UF
                     }
                     /*===========FINAL TABELA - TELEFONE===========*/
                     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -631,11 +634,11 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 
         if (i == 0)
         {
-            printf("-----------+-----------------+-----------------+-----------------+-----------------+---------+-------------------------\n");
+            printf("-----------+-----------------+-----------------+-----------------+-----------------+----------+-------------------------\n");
         }
         else
         {
-            printf("\n-----------+-----------------+-----------------+-----------------+-----------------+---------+-------------------------\n");
+            printf("\n-----------+-----------------+-----------------+-----------------+-----------------+----------+-------------------------\n");
         }
 
         /*OBJ: Descobrir a quantidade de digitos que tem em cada valor sem precisa alterar a sua "TIPAGEM padrão"*/
@@ -749,7 +752,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
 {
     char cabecalhoFabricante[82] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
     char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |   UF    |          DESCRICAO                "};
-    char relatorio[10][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Listar os produtos de um determinado estado", "Listar os produtos de uma determinada marca", "Apresentar o(s) estado(s) onde esta(ao) registrado o produto mais caro", "Apresentar o(s) fabricante(s) que está registrado o produto mais barato", "Listar todos os produtos em ordem crescente de valor-venda", "Listar todos os produtos em ordem crescente de lucro", "Listar todos os produtos em ordem crescente de percentual de lucro"};
+    char relatorio[10][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Produtos de um determinado estado", "Produtos de uma determinada marca", "Estado(s) onde esta(ao) registrado o produto mais caro", "Fabricante(s) que esta(ao) registrado o produto mais barato", "Produtos em ordem crescente de valor-venda", "Produtos em ordem crescente de lucro", "Produtos em ordem crescente de percentual de lucro"};
 
     // opção 1,6 do menu principal imprime esta tabela
     if (ans == 1 || ans == 6)
@@ -1074,11 +1077,11 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam)
         {
             if (count < 10 /*num_ufs*/)
             {
-                printf("[%d]%-9s", count + 1, ufs[count]);
+                printf("[%d]%-9s", count, ufs[count]);
             }
             else if (count > 9 && count < 27)
             {
-                printf("[%d]%-8s", count + 1, ufs[count]); // para um melhor alinhamento
+                printf("[%d]%-8s", count, ufs[count]); // para um melhor alinhamento
             }
             count++;
         }
