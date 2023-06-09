@@ -6,16 +6,32 @@
 
 ## Índice 
 
-- [Projeto 3 (Lista Avaliativa 3)](#Projeto 3 (Lista Avaliativa 3))
+- [Projeto 3 (Lista Avaliativa 3)](#Projeto-3-(Lista-Avaliativa-3))
 - [Índice](#índice)
 - [Descrição do projeto](#descrição-do-projeto)
-- [:hammer: Funcionalidades do projeto](#hammer-funcionalidades-do-projeto)
-- [📁 Acesso ao projeto](#-acesso-ao-projeto)
-- [✔️ Técnicas e tecnologias utilizadas](#️-técnicas-e-tecnologias-utilizadas)
+- [Funcionalidades do projeto](#funcionalidades-do-projeto)
+- [Acesso ao projeto](#acesso-ao-projeto)
+- [Técnicas e tecnologias utilizadas](#️técnicas-e-tecnologias-utilizadas)
 - [Autores](#autores)
 
 ## Descrição do projeto
-O Projeto 3 (Lista Avaliativa 3) tem o objetivo de aprendizado ao GIT e todos o conteudos passados em sala de aula.
+<div>
+  <h5>
+    O Projeto 3 (Lista Avaliativa 3) tem o objetivo de aprendizado ao GIT e todos o conteudos passados em sala de aula.
+    <p>
+      Elabore um programa onde o usuário armazenará por meio de Structs os dados de "Produtos"
+      e "Fabricantes", serão cadastrados no mínimo 2 fabricantes (máximo 5) e no mínimo 5 produtos
+      (máximo 50).
+    </p>
+    <p>
+      Produto: Descrição, peso, valor de compra, valor de venda, valor do lucro (calculado
+      automaticamente), percentual do lucro (calculado automaticamente) e fabricante.
+      Fabricante: Marca (nome), site, telefone, UF (todas as unidades da federação previamente
+      cadastradas AC, AM, AP,.., SP, TO).
+    </p>
+      Por fim crie um menu para emitir os relatórios abaixo:
+  </h5>
+</div>
 
 ![Exemplo do Projeto](./docs/struct-img.jpg)
 
