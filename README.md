@@ -48,6 +48,32 @@
 
 ![Exemplo do Projeto](./docs/img_2.jpg)
 
+## Diagrama da Struct
+
+![Exemplo do Projeto](./docs/struct-img.jpg)
+```mermaid
+graph LR;
+
+A[Descricao]-->G{Produto}
+B[Peso]-->G{Produto}
+C[Valor de compra]-->G{Produto}
+D[ID Produtos]-->G{Produto}
+N[ID UF]-->G{Produto}
+E[ID Fabricante]-->G{Produto}
+
+G{Produto}<-->H{UF}
+I[Nome]-->H{UF}
+N[ID UF]-->H{UF}
+
+H{UF}<-->J{Fabricante}
+K[Nome da marca]-->J{Fabricante}
+L[Site]-->J{Fabricante}
+Y[Telefone]-->J{Fabricante}
+P[UF]-->J{Fabricante}
+F[ID Fabricante]-->J{Fabricante}
+
+```
+
 ## :hammer: Funcionalidades do projeto
 
 - `Funcionalidade 1`: Entradas e Saídas dos dados.
