@@ -640,11 +640,11 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 
         if (i == 0)
         {
-            printf("-----------+-----------------+-----------------+-----------------+-----------------+----------+-------------------------\n");
+            printf("-----------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
         }
         else
         {
-            printf("\n-----------+-----------------+-----------------+-----------------+-----------------+----------+-------------------------\n");
+            printf("\n-----------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
         }
 
         /*OBJ: Descobrir a quantidade de digitos que tem em cada valor sem precisa alterar a sua "TIPAGEM padrão"*/
@@ -734,10 +734,10 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             }
             ContPosicao++;
         }
-        printf(" %s", uf[ids_produtos[i]].nome);
+        //printf(" %s", uf[ids_produtos[i]].nome); averiguar
 
         ContPosicao = 0;
-        ContPosicao += 2; // todas uf possuem apenas 2letras.
+        /*ContPosicao += 2; // todas uf possuem apenas 2letras.
         while (ContPosicao < 6)
         {
             printf(" ");
@@ -747,7 +747,7 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             }
             ContPosicao++;
         }
-
+        */
         printf(" %s", produto[ids_produtos[i]].descricao);
     }
 }
@@ -757,7 +757,7 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans)
 {
     char cabecalhoFabricante[82] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
-    char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |   UF     |          DESCRICAO                "};
+    char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |          DESCRICAO                "};
     char relatorio[10][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Produtos de um determinado estado", "Produtos de uma determinada marca", "Estado(s) onde esta(ao) registrado o produto mais caro", "Fabricante(s) que esta(ao) registrado o produto mais barato", "Produtos em ordem crescente de valor-venda", "Produtos em ordem crescente de lucro", "Produtos em ordem crescente de percentual de lucro"};
 
     // opção 1,6 do menu principal imprime esta tabela
