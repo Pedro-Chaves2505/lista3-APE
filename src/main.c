@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #define MIN_PRODUTO 3
 #define MAX_PRODUTO 50
-#define MIN_FABRICANTE 0
+#define MIN_FABRICANTE 2
 #define MAX_FABRICANTE 5
 
 typedef struct
