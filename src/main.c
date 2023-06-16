@@ -71,6 +71,8 @@ void preenche_vet_com_ids(int vet[], int tam);
 int compara_nome_produtos(const void *a, const void *b);
 int compara_nome_marca(const void *a, const void *b);
 
+float le_valida_constraints(float min, float max, char message[], char err[]);
+
 int main()
 {
     PRODUTO produto[50];
@@ -580,21 +582,19 @@ void DescricaoProduto(PRODUTO *produto, int i)
 
 void PesoProduto(PRODUTO *produto, int i)
 {
-    printf("Infome o peso(KG):\n> ");
-    scanf("%f", &produto[i].peso);
+    produto[i].peso = le_valida_constraints(0.05, 50, "Informe o peso(KG):\n> ", "!!!O peso deve estar entre 0.05kg e 50kg!!!");
+    // validação
 }
 
 void ValorVendaProduto(PRODUTO *produto, int i)
 {
-    printf("Informe o valor de venda(R$):\n> ");
-    scanf("%f", &produto[i].valor_venda);
+    produto[i].valor_venda = le_valida_constraints(1, 10000, "Informe o valor de venda(R$):\n> ", "!!!O preço deve estar entre 1 real e 10000 reais!!!");
     // validação
 }
 
 void ValorCompraProduto(PRODUTO *produto, int i)
 {
-    printf("Informe o valor de compra(R$):\n> ");
-    scanf("%f", &produto[i].valor_compra);
+    produto[i].valor_compra = le_valida_constraints(0.5, 8000, "Informe o valor de compra(R$):\n> ", "!!!O preço de compra deve estar entre 0.5 e 8000 reais!!!");
     // validação
 }
 
@@ -1251,4 +1251,23 @@ int compara_nome_marca(const void *a, const void *b){
     const FABRICANTE *fabricanteB = (const FABRICANTE *)b;
     //retorna em ordem decrescente(Z-A)
     return strcmp((*(fabricanteB)).nome_marca, (*(fabricanteA)).nome_marca);
+}
+
+float le_valida_constraints(float min, float max, char message[], char err[])
+{
+    float n;
+    if (max < min) {
+        float aux = max;
+        max = min;
+        min = aux;
+    }
+    while(true){
+        printf("%s",message);
+        scanf("%d",&n);
+        if ((min < n) && (n < max)) {
+            return n;
+        } else {
+            printf("%s",err);
+        }
+    }
 }
