@@ -307,7 +307,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                         if (posicao_DigTelefone == 17)
                         {
                             printf("| ");
-                            printf("%s", uf[ids_fabrs[i]].nome); // TABELA - UF
+                            printf("%s", uf[fabricante[i].id_uf].nome); // TABELA - UF
                         }
                         /*===========FINAL TABELA - TELEFONE===========*/
                         printf("\n\t\t | ");
@@ -373,7 +373,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
-                        printf("%s", uf[i].nome); // TABELA - UF
+                        printf("%s", uf[fabricante[i].id_uf].nome); // TABELA - UF
                     }
                     /*===========FINAL TABELA - TELEFONE===========*/
 
@@ -467,7 +467,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                             if (posicao_DigTelefone == 17)
                             {
                                 printf("| ");
-                                printf("%s", uf[i].nome); // TABELA - UF
+                                printf("%s", uf[fabricante[i].id_uf].nome); // TABELA - UF
                             }
                         }
                         /*===========FINAL TABELA - TELEFONE===========*/
@@ -537,7 +537,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
-                        printf("%s", uf[i].nome); // TABELA - UF
+                        printf("%s", uf[fabricante[i].id_uf].nome); // TABELA - UF
                     }
                     /*===========FINAL TABELA - TELEFONE===========*/
                     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
