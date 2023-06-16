@@ -9,10 +9,10 @@
 
 typedef struct
 {
-    char descricao[25];
+    char descricao[25], nome[20];
     char digitosPeso[16], dig_V_Venda[16], dig_V_Compra[16], dig_V_lucro[16], dig_P_lucro[16];
     float peso, valor_compra, valor_venda, lucro, porcentagem_de_lucro;
-    int id_uf, id_fabricante;
+    int id_uf, id_fabricante, qtd_carac_nome;
     int id_produto;
 } PRODUTO;
 
@@ -40,6 +40,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
 void nome__marca_compactado_p6(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf);
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans);
 
+void nomeProduto(PRODUTO*produto, int i);
 void DescricaoProduto(PRODUTO *produto, int i);
 void ValorVendaProduto(PRODUTO *produto, int i);
 void ValorCompraProduto(PRODUTO *produto, int i);
@@ -548,10 +549,17 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
 
 /*-----------------------------------------------------------------------*/
 /*--------------------------- [2]LISTAR TODOS OS PRODUTOS -----------------*/
+void nomeProduto(PRODUTO*produto, int i){
+
+    printf("\n\t%do PRODUTO\n", i + 1);
+    printf("Informe seu nome:\n> ");
+    scanf(" %[^\n]s", (*(produto + i)).nome);
+    //validacao --> máx=20 de caracters no nome
+}
 
 void DescricaoProduto(PRODUTO *produto, int i)
 {
-    printf("\n\t%do PRODUTO\n", i + 1);
+    
     printf("Informe a descricao:\n> ");
     scanf(" %[^\n]s", (*(produto + i)).descricao);
     // validacao
@@ -599,6 +607,7 @@ int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_
 
     while (produto_registrado < MIN_PRODUTO)
     { // minimo de 5 produtos registrados
+        nomeProduto(produto, produto_registrado);
         DescricaoProduto(produto, produto_registrado);
         PesoProduto(produto, produto_registrado);
         ValorCompraProduto(produto, produto_registrado);
@@ -614,6 +623,7 @@ int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_
 
         if ((confirm == 's' || confirm == 'S') && produto_registrado < MAX_PRODUTO)
         {
+            nomeProduto(produto, produto_registrado);
             DescricaoProduto(produto, produto_registrado);
             PesoProduto(produto, produto_registrado);
             ValorCompraProduto(produto, produto_registrado);
@@ -640,11 +650,11 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 
         if (i == 0)
         {
-            printf("-----------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
+            printf("-----------------+------------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
         }
         else
         {
-            printf("\n-----------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
+            printf("\n-----------------+------------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
         }
 
         /*OBJ: Descobrir a quantidade de digitos que tem em cada valor sem precisa alterar a sua "TIPAGEM padrão"*/
@@ -670,8 +680,27 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
         int posicoesPercLucro = strlen(stringPercentualLucro.dig_P_lucro); // numero de digitos do produto[i].porcentagem_de_lucro
 
         /*=================================================================================================*/
+        produto[ids_produtos[i]].qtd_carac_nome = strlen(produto[ids_produtos[i]].nome); // armazena a quantidade de caracteres que terah no nome do produto... para fazer um melhor alinhamento na tabela
+        
+        if(produto[ids_produtos[i]].qtd_carac_nome<20){
+            int sequencia_caracter=0;
+            while(sequencia_caracter<=produto[ids_produtos[i]].qtd_carac_nome){
+                printf("%c", (*(produto+ ids_produtos[i])).nome[sequencia_caracter]);
+                sequencia_caracter++;
+            }
+            while(sequencia_caracter < 18){
+                printf(" ");
+                sequencia_caracter++;
+            }
+            if(sequencia_caracter == 18){
+                printf("| ");
+            }
+        }
+
+
         printf("%.2f KG", produto[ids_produtos[i]].peso);
 
+        ContPosicao = 0;
         ContPosicao = posicoesPeso;
         while (ContPosicao < 8)
         {
@@ -757,7 +786,7 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produtos[], UF *uf, PRODUTO *produto, int produto_registrado, int ans)
 {
     char cabecalhoFabricante[82] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
-    char cabecalhoProduto[] = {"   PESO    |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |          DESCRICAO                "};
+    char cabecalhoProduto[] = {"     NOME        |   PESO     |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |          DESCRICAO                "};
     char relatorio[10][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Produtos de um determinado estado", "Produtos de uma determinada marca", "Estado(s) onde esta(ao) registrado o produto mais caro", "Fabricante(s) que esta(ao) registrado o produto mais barato", "Produtos em ordem crescente de valor-venda", "Produtos em ordem crescente de lucro", "Produtos em ordem crescente de percentual de lucro"};
 
     // opção 1,6 do menu principal imprime esta tabela
@@ -1161,4 +1190,8 @@ void imprimir_idFabr_nomeFabr(FABRICANTE *fabricante, int qtd_fabr)
         printf("\n");
     }
     printf("\n> ");
+}
+
+void list_prods_ordem_alfab_crescente(){
+
 }
