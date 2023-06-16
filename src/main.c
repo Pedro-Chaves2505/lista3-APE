@@ -2,7 +2,7 @@
 #include "le_valida.c"
 #include <string.h>
 #include <stdlib.h>
-#define MIN_PRODUTO 3
+#define MIN_PRODUTO 5
 #define MAX_PRODUTO 50
 #define MIN_FABRICANTE 2
 #define MAX_FABRICANTE 5
@@ -63,18 +63,20 @@ void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[],
 void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int marca_registrada, UF *uf);
 void list_prods_marca(PRODUTO *produtos, FABRICANTE *fabricantes, int tam);
 void list_prods_ordem_alfab_crescente(PRODUTO produtos[], int ids_produtos[], int quantidade_de_produtos);
+void list_nomeMarca_ordem_alfab_decrescente(FABRICANTE fabricantes[], int ids_fabricantes[], int quantidade_de_fabricantes);
 
 // Helpers
 void copiar_vet(int vet1[], int vet2[], int tam);
 void preenche_vet_com_ids(int vet[], int tam);
 int compara_nome_produtos(const void *a, const void *b);
+int compara_nome_marca(const void *a, const void *b);
 
 int main()
 {
     PRODUTO produto[50];
     FABRICANTE fabricante[5];
     UF uf[27];
-    int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, ids_percent_lucro_crescente[50] = {}, ids_dos_vindos_de_certa_UF[50], ids_lucro_crescente[50] = {}, ids_pvenda_crescente[50] = {}, ids_top_mais_caros[50] = {}, ids_top_mais_baratos[50] = {}, ids_produtos[50]={};
+    int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, ids_percent_lucro_crescente[50] = {}, ids_dos_vindos_de_certa_UF[50], ids_lucro_crescente[50] = {}, ids_pvenda_crescente[50] = {}, ids_top_mais_caros[50] = {}, ids_top_mais_baratos[50] = {}, ids_produtos[50]={}, ids_fabricantes[5]={}, ids_nomeMarca_decrescente[5] = {};
 
     qtd_marcas = le_valida_marca(fabricante, uf);
 
@@ -87,19 +89,19 @@ int main()
     {
         printf("\n\nDigite a opcao desejada: \n\n");
 
-        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[3] Listar os produtos vindos de um certo estado\n[4] Listar os produtos vindos de uma certa marca\n[5] Listar os estados dos produtos mais caros\n[6] Listar os fabricantes dos produtos mais baratos\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro\n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[10] Listar todos os produtos em ordem alfabetica crescente(A-Z)\n[0] sair\n\n> ");
+        printf("\n[1] Listar todas as marcas\n[2] Listar todos os produtos\n[3] Listar os produtos vindos de um certo estado\n[4] Listar os produtos vindos de uma certa marca\n[5] Listar os estados dos produtos mais caros\n[6] Listar os fabricantes dos produtos mais baratos\n[7] Listar todos os produtos em ordem crescente de valor\n[8] Listar todos os produtos em ordem crescente de lucro\n[9] Listar todos os produtos em ordem crescente de percentual de lucro\n[10] Listar todos os produtos em ordem alfabetica crescente(A-Z)\n[11] Listar todas as marcas em ordem alfabetica decrescente(Z-A)\n[0] sair\n\n> ");
         scanf("%d", &ans);
         switch (ans)
         {
         case 0:
             break;
         case 1:
-
-            EstruturaTabela(fabricante, qtd_marcas, ids_lucro_crescente /*não faz nada*/, uf, produto, qtd_marcas, ans); // ajustar esse id
+            preenche_vet_com_ids(ids_fabricantes, qtd_marcas);
+            EstruturaTabela(fabricante, qtd_marcas, ids_fabricantes, uf, produto, qtd_marcas, ans);
             break;
         case 2:
             ord_decrescente_valor_venda(&produto[0], ids_pvenda_crescente, qtd_produtos);
-            EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente /*não faz nada*/, uf, produto, qtd_produtos, ans); // teste
+            EstruturaTabela(fabricante, qtd_marcas, ids_pvenda_crescente, uf, produto, qtd_produtos, ans);
             break;
         case 3:
             list_prods_por_uf(produto, fabricante, qtd_produtos, qtd_marcas, uf);
@@ -130,13 +132,11 @@ int main()
             break;
         case 10:
             list_prods_ordem_alfab_crescente(produto, ids_produtos, qtd_produtos);
-            EstruturaTabela(fabricante, qtd_marcas, ids_produtos/*ids_percent_lucro_crescente*/, uf, produto, qtd_produtos, ans); // ajustar esse id, 10teste
-            /*
-            for (int i = 0; i < qtd_produtos; i++)
-            {
-                printf("%s\n", produto[i].nome);
-            }
-            */
+            EstruturaTabela(fabricante, qtd_marcas, ids_produtos, uf, produto, qtd_produtos, ans);
+            break;
+        case 11:
+            list_nomeMarca_ordem_alfab_decrescente(fabricante, ids_nomeMarca_decrescente, qtd_marcas);
+            EstruturaTabela(fabricante, qtd_marcas, ids_nomeMarca_decrescente, uf, produto, qtd_marcas, ans);   
             break;
         default:
             printf("Essa nao e uma opcao valida!\n");
@@ -251,7 +251,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
 {
     int i = 0;
     int ids_fabrs[5] = {};
-    if (ans == 1)
+    if (ans == 1|| ans ==11)
     {
         preenche_vet_com_ids(ids_fabrs, marca_registrada);
     }
@@ -804,10 +804,10 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
 {
     char cabecalhoFabricante[82] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
     char cabecalhoProduto[] = {"     NOME        |   PESO     |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |          DESCRICAO                "};
-    char relatorio[12][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Produtos de um determinado estado", "Produtos de uma determinada marca", "Estado(s) do(s) produto(s) mais caro(s)", "Fabricante(s) com produto(s) mais barato(s)", "Produtos em ordem crescente de valor-venda", "Produtos em ordem crescente de lucro", "Produtos em ordem crescente de percentual de lucro", "Lista dos produtos em ordem alfabetica(A-Z)", ""};
+    char relatorio[12][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Produtos de um determinado estado", "Produtos de uma determinada marca", "Estado(s) do(s) produto(s) mais caro(s)", "Fabricante(s) com produto(s) mais barato(s)", "Produtos em ordem crescente de valor-venda", "Produtos em ordem crescente de lucro", "Produtos em ordem crescente de percentual de lucro", "Lista dos produtos em ordem alfabetica(A-Z)", "Lista marcas em ordem alfabetica(Z-A)"};
 
-    // opção 1,6 do menu principal imprime esta tabela
-    if (ans == 1 || ans == 6)
+    // opção 1,6 e 11 do menu principal imprime esta tabela
+    if (ans == 1 || ans == 6 || ans == 11)
     {
         system("clear"); // linux
         system("cls");   // windows
@@ -816,7 +816,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
         printf("                          RELATORIO %d -  %s               ", ans, relatorio[ans]);
         printf("\n================================================================================\n");
         printf("%s\n", cabecalhoFabricante);
-        if (ans == 1)
+        if (ans == 1 || ans ==11)
         {
             nome__marca_compactado(fabricante, marca_registrada, produto, ids_produtos, uf, ans);
         }
@@ -825,7 +825,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
             nome__marca_compactado(fabricante, produto_registrado, produto, ids_produtos, uf, ans);
         }
     }
-    // opção 2,3,4,5,7,8,9 do menu principal imprime esta tabela{
+    // opção 2,3,4,5,7,8,9 e 10 do menu principal imprime esta tabela{
     else
     {
         system("clear"); // linux
@@ -1191,12 +1191,22 @@ void list_prods_ordem_alfab_crescente(PRODUTO produtos[], int ids_produtos[], in
         ids_ordenados[i] = i;
     }
 
-    //ordenando em ordem alfabetica
+    //Colocando em ordem alfabetica 
     qsort(produtos, quantidade_de_produtos, sizeof(PRODUTO), compara_nome_produtos);
     // usa o array de ids para imprmir
     copiar_vet(ids_produtos, ids_ordenados, quantidade_de_produtos);
     printf("\nOrdem crescente de A-Z.\n");
 }
+
+void list_nomeMarca_ordem_alfab_decrescente(FABRICANTE fabricantes[], int ids_nomeMarca_decrescente[], int quantidade_de_fabricantes){
+
+    // usa o array de ids para imprmir
+    preenche_vet_com_ids(ids_nomeMarca_decrescente, quantidade_de_fabricantes);
+
+    //Colocando em ordem alfabetica
+    qsort(fabricantes, quantidade_de_fabricantes, sizeof(FABRICANTE), compara_nome_marca);
+}
+
 // Helpers
 void copiar_vet(int vet1[], int vet2[], int tam)
 {
@@ -1232,6 +1242,13 @@ int compara_nome_produtos(const void *a, const void *b)
 {
     const PRODUTO *produtoA = (const PRODUTO *)a;
     const PRODUTO *produtoB = (const PRODUTO *)b;
-
+    //retorna em ordem crescente(A-Z)
     return strcmp((*(produtoA)).nome, (*(produtoB)).nome);
+}
+
+int compara_nome_marca(const void *a, const void *b){
+    const FABRICANTE *fabricanteA = (const FABRICANTE *)a;
+    const FABRICANTE *fabricanteB = (const FABRICANTE *)b;
+    //retorna em ordem decrescente(Z-A)
+    return strcmp((*(fabricanteB)).nome_marca, (*(fabricanteA)).nome_marca);
 }
