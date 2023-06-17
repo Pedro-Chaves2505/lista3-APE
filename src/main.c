@@ -1256,18 +1256,19 @@ int compara_nome_marca(const void *a, const void *b){
 float le_valida_constraints(float min, float max, char message[], char err[])
 {
     float n;
+    int loop = 1;
     if (max < min) {
         float aux = max;
         max = min;
         min = aux;
     }
-    while(true){
+    do{
         printf("%s",message);
         scanf("%d",&n);
         if ((min < n) && (n < max)) {
-            return n;
+            loop = 0;
         } else {
             printf("%s",err);
         }
-    }
+    }while(loop);
 }
