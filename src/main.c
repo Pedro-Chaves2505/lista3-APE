@@ -1264,7 +1264,7 @@ float le_valida_constraints(float min, float max, char message[], char err[])
     }
     do{
         printf("%s",message);
-        scanf("%d",&n);
+        scanf("%f",&n);
         if ((min < n) && (n < max)) {
             loop = 0;
         } else {
