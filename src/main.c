@@ -34,7 +34,7 @@ void RegistrarMarca(FABRICANTE *fabricante, int i);
 void RegistrarSite(FABRICANTE *fabricante, int i);
 void RegistrarTelefone(FABRICANTE *fabricante, int i);
 void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf);
-int le_valida_marca(FABRICANTE *fabricante, UF *uf);
+int le_valida_marca(FABRICANTE **fabricante, UF *uf);
 
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf, int ans);
 void nome__marca_compactado_p6(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf);
@@ -76,11 +76,14 @@ float le_valida_constraints(float min, float max, char message[], char err[]);
 int main()
 {
     PRODUTO produto[50];
-    FABRICANTE fabricante[5];
+    FABRICANTE *fabricante;
     UF uf[27];
+
+    fabricante = calloc(2, sizeof(FABRICANTE));
+
     int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, *ids_percent_lucro_crescente, *ids_lucro_crescente, *ids_pvenda_crescente, *ids_top_mais_caros, *ids_top_mais_baratos, *ids_produtos, *ids_fabricantes, *ids_nomeMarca_decrescente;
 
-    qtd_marcas = le_valida_marca(fabricante, uf);
+    qtd_marcas = le_valida_marca(&fabricante, uf);
 
     ids_fabricantes = calloc(qtd_marcas, sizeof(int));
     ids_nomeMarca_decrescente = calloc(qtd_marcas, sizeof(int));
@@ -224,17 +227,17 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
     }
 }
 
-int le_valida_marca(FABRICANTE *fabricante, UF *uf)
+int le_valida_marca(FABRICANTE **fabricante, UF *uf)
 { // CHAMADA NA MAIN -> qtd_marcas = le_valida_marca(fabricante);
     int marca_registrada = 0;
     char confirm;
 
     while (marca_registrada < MIN_FABRICANTE)
     { // minimo de 2 marcas registradas
-        RegistrarMarca(fabricante, marca_registrada);
-        RegistrarSite(fabricante, marca_registrada);
-        RegistrarTelefone(fabricante, marca_registrada);
-        receber_UF_fabricante(fabricante, marca_registrada, uf);
+        RegistrarMarca(*fabricante, marca_registrada);
+        RegistrarSite(*fabricante, marca_registrada);
+        RegistrarTelefone(*fabricante, marca_registrada);
+        receber_UF_fabricante(*fabricante, marca_registrada, uf);
 
         marca_registrada++;
     }
@@ -246,10 +249,12 @@ int le_valida_marca(FABRICANTE *fabricante, UF *uf)
 
         if ((confirm == 's' || confirm == 'S') && marca_registrada < MAX_FABRICANTE)
         {
-            RegistrarMarca(fabricante, marca_registrada);
-            RegistrarSite(fabricante, marca_registrada);
-            RegistrarTelefone(fabricante, marca_registrada);
-            receber_UF_fabricante(fabricante, marca_registrada, uf);
+
+            *fabricante = realloc(*fabricante, ((marca_registrada + 1) * sizeof(FABRICANTE)));
+            RegistrarMarca(*fabricante, marca_registrada);
+            RegistrarSite(*fabricante, marca_registrada);
+            RegistrarTelefone(*fabricante, marca_registrada);
+            receber_UF_fabricante(*fabricante, marca_registrada, uf);
             marca_registrada++;
         }
 
