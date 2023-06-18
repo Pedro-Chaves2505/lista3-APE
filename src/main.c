@@ -718,27 +718,16 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 
         ContPosicao = 0;
         ContPosicao += posicoesPeso;
-        if(posicoesPeso== 4){
-            while (ContPosicao < 10)
-            {
-                printf(" ");
-                if (ContPosicao == 9)
-                {
-                    printf("| ");
-                }
-                ContPosicao++;
-            }
-        }else{
-            while (ContPosicao < 8)
-            {
-                printf(" ");
-                if (ContPosicao == 7)
-                {
-                    printf("| ");
-                }
-                ContPosicao++;
-            }
+        while (ContPosicao < 8)
+        {
+            printf(" ");
+            ContPosicao++;
         }
+        if (ContPosicao == 8)
+        {
+            printf("| ");
+        }
+
         printf("R$ %.2f", produto[ids_produtos[i]].valor_venda);
 
         ContPosicao = 0;
