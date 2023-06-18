@@ -47,7 +47,7 @@ void ValorCompraProduto(PRODUTO *produto, int i);
 void PesoProduto(PRODUTO *produto, int i);
 float ValorDeLucro(PRODUTO *produto, int i);
 float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro);
-int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr);
+int le_valida_produto(PRODUTO **produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr);
 void receber_id_uf(PRODUTO *para_onde_vai, int i);
 int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *fabricante, int qtd_fabr);
 void imprimir_idFabr_nomeFabr(FABRICANTE *fabricante, int qtd_fabr);
@@ -75,11 +75,12 @@ float le_valida_constraints(float min, float max, char message[], char err[]);
 
 int main()
 {
-    PRODUTO produto[50];
+    PRODUTO *produto;
     FABRICANTE *fabricante;
     UF uf[27];
 
-    fabricante = calloc(2, sizeof(FABRICANTE));
+    produto = calloc(MIN_PRODUTO, sizeof(PRODUTO));
+    fabricante = calloc(MIN_FABRICANTE, sizeof(FABRICANTE));
 
     int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, *ids_percent_lucro_crescente, *ids_lucro_crescente, *ids_pvenda_crescente, *ids_top_mais_caros, *ids_top_mais_baratos, *ids_produtos, *ids_fabricantes, *ids_nomeMarca_decrescente;
 
@@ -88,7 +89,7 @@ int main()
     ids_fabricantes = calloc(qtd_marcas, sizeof(int));
     ids_nomeMarca_decrescente = calloc(qtd_marcas, sizeof(int));
 
-    qtd_produtos = le_valida_produto(produto, uf, fabricante, qtd_marcas);
+    qtd_produtos = le_valida_produto(&produto, uf, fabricante, qtd_marcas);
 
     ids_percent_lucro_crescente = calloc(qtd_produtos, sizeof(int));
     ids_lucro_crescente = calloc(qtd_produtos, sizeof(int));
@@ -627,19 +628,19 @@ float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro)
     return PercentualLucro;
 }
 
-int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
+int le_valida_produto(PRODUTO **produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
 { // CHAMADA NA MAIN --> qtd_produtos = le_valida_produto(produto, uf);
     int produto_registrado = 0;
     char confirm;
 
     while (produto_registrado < MIN_PRODUTO)
     { // minimo de 5 produtos registrados
-        nomeProduto(produto, produto_registrado);
-        DescricaoProduto(produto, produto_registrado);
-        PesoProduto(produto, produto_registrado);
-        ValorCompraProduto(produto, produto_registrado);
-        ValorVendaProduto(produto, produto_registrado);
-        associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
+        nomeProduto(*produto, produto_registrado);
+        DescricaoProduto(*produto, produto_registrado);
+        PesoProduto(*produto, produto_registrado);
+        ValorCompraProduto(*produto, produto_registrado);
+        ValorVendaProduto(*produto, produto_registrado);
+        associar_fabr_a_prod(*produto, produto_registrado, fabricante, qtd_fabr);
         produto_registrado++;
     }
 
@@ -650,12 +651,13 @@ int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_
 
         if ((confirm == 's' || confirm == 'S') && produto_registrado < MAX_PRODUTO)
         {
-            nomeProduto(produto, produto_registrado);
-            DescricaoProduto(produto, produto_registrado);
-            PesoProduto(produto, produto_registrado);
-            ValorCompraProduto(produto, produto_registrado);
-            ValorVendaProduto(produto, produto_registrado);
-            associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
+            *produto = realloc(*produto, (produto_registrado + 1) * sizeof(PRODUTO));
+            nomeProduto(*produto, produto_registrado);
+            DescricaoProduto(*produto, produto_registrado);
+            PesoProduto(*produto, produto_registrado);
+            ValorCompraProduto(*produto, produto_registrado);
+            ValorVendaProduto(*produto, produto_registrado);
+            associar_fabr_a_prod(*produto, produto_registrado, fabricante, qtd_fabr);
             produto_registrado++;
         }
 
