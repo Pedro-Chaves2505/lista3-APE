@@ -2,6 +2,7 @@
 #include "le_valida.c"
 #include <string.h>
 #include <stdlib.h>
+#define TOTAL_UFS 27
 #define MIN_PRODUTO 3
 #define MAX_PRODUTO 50
 #define MIN_FABRICANTE 2
@@ -77,7 +78,7 @@ int main()
 {
     PRODUTO *produto;
     FABRICANTE *fabricante;
-    UF uf[27];
+    UF uf[TOTAL_UFS];
 
     produto = calloc(MIN_PRODUTO, sizeof(PRODUTO));
     fabricante = calloc(MIN_FABRICANTE, sizeof(FABRICANTE));
@@ -188,7 +189,7 @@ void RegistrarTelefone(FABRICANTE *fabricante, int i)
 
 void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
 {
-    char ufs[27 /*nm_ufs*/][50] =
+    char ufs[TOTAL_UFS /*nm_ufs*/][50] =
         {" AC", " AL", " AP", " AM", " BA",
          " CE", " DF", " ES", " GO", "MA",
          "MT", "MS", "MG", "PA", "PB",
@@ -207,7 +208,7 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
             {
                 printf("[%d]%-9s", count, ufs[count]);
             }
-            else if (count > 9 && count < 27)
+            else if (count > 9 && count < TOTAL_UFS)
             {
                 printf("[%d]%-8s", count, ufs[count]); // para um melhor alinhamento
             }
@@ -218,7 +219,7 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
     printf("Selecione uma UF:\n> ");
     scanf("%d", &(*(fabricante + i)).id_uf); // apenas para testes
     // validacao - menu com as UF jah definidas
-    for (int v = 0; v < 27; v++)
+    for (int v = 0; v < TOTAL_UFS; v++)
     {
         if ((*(fabricante + i)).id_uf >= 0 && (*(fabricante + i)).id_uf <= 26)
         {
@@ -1128,7 +1129,7 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
     int i, idx_uf_pesquisada, aux;
     int j, retorno;
     char uf_search[30];
-    char ufs[27 /*nm_ufs*/][50] =
+    char ufs[TOTAL_UFS /*nm_ufs*/][50] =
         {" AC", " AL", " AP", " AM", " BA",
          " CE", " DF", " ES", " GO", "MA",
          "MT", "MS", "MG", "PA", "PB",
@@ -1151,7 +1152,7 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
         if (idx_uf_pesquisada == i)
             strcpy(uf[idx_uf_pesquisada].nome, uf[fabricantes[i].id_uf].nome);
     }
-    for (int v = 0; v < 27; v++)
+    for (int v = 0; v < TOTAL_UFS; v++)
     {
         retorno = strcmp(uf[idx_uf_pesquisada].nome, ufs[v]);
         if (retorno == 0)
