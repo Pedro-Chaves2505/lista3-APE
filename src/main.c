@@ -714,18 +714,30 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             }
         }
 
-        printf("%.2f KG", produto[ids_produtos[i]].peso);
+        printf("KG %.2f", produto[ids_produtos[i]].peso);
 
         ContPosicao = 0;
-        ContPosicao = posicoesPeso + 3;
-        while (ContPosicao < 11)
-        {
-            printf(" ");
-            if (ContPosicao == 10)
+        ContPosicao += posicoesPeso;
+        if(posicoesPeso== 4){
+            while (ContPosicao < 10)
             {
-                printf("| ");
+                printf(" ");
+                if (ContPosicao == 9)
+                {
+                    printf("| ");
+                }
+                ContPosicao++;
             }
-            ContPosicao++;
+        }else{
+            while (ContPosicao < 8)
+            {
+                printf(" ");
+                if (ContPosicao == 7)
+                {
+                    printf("| ");
+                }
+                ContPosicao++;
+            }
         }
         printf("R$ %.2f", produto[ids_produtos[i]].valor_venda);
 
