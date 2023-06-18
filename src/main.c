@@ -2,7 +2,7 @@
 #include "le_valida.c"
 #include <string.h>
 #include <stdlib.h>
-#define MIN_PRODUTO 5
+#define MIN_PRODUTO 3
 #define MAX_PRODUTO 50
 #define MIN_FABRICANTE 2
 #define MAX_FABRICANTE 5
@@ -78,11 +78,21 @@ int main()
     PRODUTO produto[50];
     FABRICANTE fabricante[5];
     UF uf[27];
-    int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, ids_percent_lucro_crescente[50] = {}, ids_dos_vindos_de_certa_UF[50], ids_lucro_crescente[50] = {}, ids_pvenda_crescente[50] = {}, ids_top_mais_caros[50] = {}, ids_top_mais_baratos[50] = {}, ids_produtos[50] = {}, ids_fabricantes[5] = {}, ids_nomeMarca_decrescente[5] = {};
+    int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, *ids_percent_lucro_crescente, *ids_lucro_crescente, *ids_pvenda_crescente, *ids_top_mais_caros, *ids_top_mais_baratos, *ids_produtos, *ids_fabricantes, *ids_nomeMarca_decrescente;
 
     qtd_marcas = le_valida_marca(fabricante, uf);
 
+    ids_fabricantes = calloc(qtd_marcas, sizeof(int));
+    ids_nomeMarca_decrescente = calloc(qtd_marcas, sizeof(int));
+
     qtd_produtos = le_valida_produto(produto, uf, fabricante, qtd_marcas);
+
+    ids_percent_lucro_crescente = calloc(qtd_produtos, sizeof(int));
+    ids_lucro_crescente = calloc(qtd_produtos, sizeof(int));
+    ids_pvenda_crescente = calloc(qtd_produtos, sizeof(int));
+    ids_top_mais_caros = calloc(qtd_produtos, sizeof(int));
+    ids_top_mais_baratos = calloc(qtd_produtos, sizeof(int));
+    ids_produtos = calloc(qtd_produtos, sizeof(int));
 
     calcula_lucro(&produto[0], qtd_produtos);
     calcula_percentuais_de_lucro(&produto[0], qtd_produtos);
