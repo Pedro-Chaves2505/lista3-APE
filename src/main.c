@@ -199,18 +199,22 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
         }
         printf("\n");
     }
-    printf("Selecione uma UF:\n> ");
-    scanf("%d", &(*(fabricante + i)).id_uf); // apenas para testes
-    // validacao - menu com as UF jah definidas
+    //validacao, apenas numerica, das ufs
+    do{
+        printf("Selecione uma UF:\n> ");
+        scanf("%d", &(*(fabricante + i)).id_uf); 
+    }while( (*(fabricante + i)).id_uf < 0 || (*(fabricante + i)).id_uf > 26);
+
+    // atribuindo nome para cada uf escolhida
     for (int v = 0; v < 27; v++)
     {
-        if ((*(fabricante + i)).id_uf >= 0 && (*(fabricante + i)).id_uf <= 26)
-        {
-            if ((*(fabricante + i)).id_uf == v)
+            if ((*(fabricante + i)).id_uf >= 0 && (*(fabricante + i)).id_uf <= 26)
+            {
+                if ((*(fabricante + i)).id_uf == v)
                 strcpy((*(uf + fabricante[i].id_uf)).nome, ufs[v]);
 
+            }
         }
-    }
 }
 
 int le_valida_marca(FABRICANTE *fabricante, UF *uf)
@@ -1130,7 +1134,39 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
     }
     printf("\n> ");
     scanf("%d", &idx_uf_pesquisada);
+    //validacao da uf a ser pesquisada de acordo com a quantidade de fabricantes disponiveis
+    if(marca_registrada==1){
+        while(idx_uf_pesquisada!=0){
+            printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
+            scanf("%d", &idx_uf_pesquisada);
+        }
+    }
+    else if(marca_registrada==2){
+        while(idx_uf_pesquisada!=0 && idx_uf_pesquisada!=1){
+            printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
+            scanf("%d", &idx_uf_pesquisada);
+        }
+    }
+    else if(marca_registrada==3){
+        while(idx_uf_pesquisada!=0 && idx_uf_pesquisada!=1 && idx_uf_pesquisada!=2){
+            printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
+            scanf("%d", &idx_uf_pesquisada);
+        }
+    }
+    else if(marca_registrada==4){
+        while(idx_uf_pesquisada!=0 && idx_uf_pesquisada!=1 && idx_uf_pesquisada!=2 && idx_uf_pesquisada!=3){
+            printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
+            scanf("%d", &idx_uf_pesquisada);
+        }
+    }
+    else{
+        while(idx_uf_pesquisada!= 0 && idx_uf_pesquisada!= 1 && idx_uf_pesquisada!= 2 && idx_uf_pesquisada!= 3 && idx_uf_pesquisada!= 4){
+        printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
+        scanf("%d", &idx_uf_pesquisada);
+    }
+    }
     
+
     // organizando a impressao do nome da uf pesquisada
     for (int i = 0; i < marca_registrada; i++){
         if(idx_uf_pesquisada==i)
