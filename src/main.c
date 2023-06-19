@@ -2,7 +2,8 @@
 #include "le_valida.c"
 #include <string.h>
 #include <stdlib.h>
-#define MIN_PRODUTO 5
+#define TOTAL_UFS 27
+#define MIN_PRODUTO 3
 #define MAX_PRODUTO 50
 #define MIN_FABRICANTE 2
 #define MAX_FABRICANTE 5
@@ -34,7 +35,7 @@ void RegistrarMarca(FABRICANTE *fabricante, int i);
 void RegistrarSite(FABRICANTE *fabricante, int i);
 void RegistrarTelefone(FABRICANTE *fabricante, int i);
 void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf);
-int le_valida_marca(FABRICANTE *fabricante, UF *uf);
+int le_valida_marca(FABRICANTE **fabricante, UF *uf);
 
 void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf, int ans);
 void nome__marca_compactado_p6(FABRICANTE *fabricante, int marca_registrada, PRODUTO *produto, int ids_produtos[], UF *uf);
@@ -47,7 +48,7 @@ void ValorCompraProduto(PRODUTO *produto, int i);
 void PesoProduto(PRODUTO *produto, int i);
 float ValorDeLucro(PRODUTO *produto, int i);
 float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro);
-int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr);
+int le_valida_produto(PRODUTO **produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr);
 void receber_id_uf(PRODUTO *para_onde_vai, int i);
 int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *fabricante, int qtd_fabr);
 void imprimir_idFabr_nomeFabr(FABRICANTE *fabricante, int qtd_fabr);
@@ -71,16 +72,32 @@ void preenche_vet_com_ids(int vet[], int tam);
 int compara_nome_produtos(const void *a, const void *b);
 int compara_nome_marca(const void *a, const void *b);
 
+float le_valida_constraints(float min, float max, char message[], char err[]);
+
 int main()
 {
-    PRODUTO produto[50];
-    FABRICANTE fabricante[5];
-    UF uf[27];
-    int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, ids_percent_lucro_crescente[50] = {}, ids_dos_vindos_de_certa_UF[50], ids_lucro_crescente[50] = {}, ids_pvenda_crescente[50] = {}, ids_top_mais_caros[50] = {}, ids_top_mais_baratos[50] = {}, ids_produtos[50]={}, ids_fabricantes[5]={}, ids_nomeMarca_decrescente[5] = {};
+    PRODUTO *produto;
+    FABRICANTE *fabricante;
+    UF uf[TOTAL_UFS];
 
-    qtd_marcas = le_valida_marca(fabricante, uf);
+    produto = calloc(MIN_PRODUTO, sizeof(PRODUTO));
+    fabricante = calloc(MIN_FABRICANTE, sizeof(FABRICANTE));
 
-    qtd_produtos = le_valida_produto(produto, uf, fabricante, qtd_marcas);
+    int qtd_marcas, qtd_produtos, i = 0, ans = 0, qtd_top_mais_caros = 0, qtd_top_mais_baratos = 0, qtd_prods_vindo_de_certa_UF = 0, id_UF_pesquisada = 0, *ids_percent_lucro_crescente, *ids_lucro_crescente, *ids_pvenda_crescente, *ids_top_mais_caros, *ids_top_mais_baratos, *ids_produtos, *ids_fabricantes, *ids_nomeMarca_decrescente;
+
+    qtd_marcas = le_valida_marca(&fabricante, uf);
+
+    ids_fabricantes = calloc(qtd_marcas, sizeof(int));
+    ids_nomeMarca_decrescente = calloc(qtd_marcas, sizeof(int));
+
+    qtd_produtos = le_valida_produto(&produto, uf, fabricante, qtd_marcas);
+
+    ids_percent_lucro_crescente = calloc(qtd_produtos, sizeof(int));
+    ids_lucro_crescente = calloc(qtd_produtos, sizeof(int));
+    ids_pvenda_crescente = calloc(qtd_produtos, sizeof(int));
+    ids_top_mais_caros = calloc(qtd_produtos, sizeof(int));
+    ids_top_mais_baratos = calloc(qtd_produtos, sizeof(int));
+    ids_produtos = calloc(qtd_produtos, sizeof(int));
 
     calcula_lucro(&produto[0], qtd_produtos);
     calcula_percentuais_de_lucro(&produto[0], qtd_produtos);
@@ -136,7 +153,7 @@ int main()
             break;
         case 11:
             list_nomeMarca_ordem_alfab_decrescente(fabricante, ids_nomeMarca_decrescente, qtd_marcas);
-            EstruturaTabela(fabricante, qtd_marcas, ids_nomeMarca_decrescente, uf, produto, qtd_marcas, ans);   
+            EstruturaTabela(fabricante, qtd_marcas, ids_nomeMarca_decrescente, uf, produto, qtd_marcas, ans);
             break;
         default:
             printf("Essa nao e uma opcao valida!\n");
@@ -172,7 +189,7 @@ void RegistrarTelefone(FABRICANTE *fabricante, int i)
 
 void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
 {
-    char ufs[27 /*nm_ufs*/][50] =
+    char ufs[TOTAL_UFS /*nm_ufs*/][50] =
         {" AC", " AL", " AP", " AM", " BA",
          " CE", " DF", " ES", " GO", "MA",
          "MT", "MS", "MG", "PA", "PB",
@@ -191,7 +208,7 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
             {
                 printf("[%d]%-9s", count, ufs[count]);
             }
-            else if (count > 9 && count < 27)
+            else if (count > 9 && count < TOTAL_UFS)
             {
                 printf("[%d]%-8s", count, ufs[count]); // para um melhor alinhamento
             }
@@ -206,28 +223,28 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
     }while( (*(fabricante + i)).id_uf < 0 || (*(fabricante + i)).id_uf > 26);
 
     // atribuindo nome para cada uf escolhida
-    for (int v = 0; v < 27; v++)
+    for (int v = 0; v < TOTAL_UFS; v++)
     {
-            if ((*(fabricante + i)).id_uf >= 0 && (*(fabricante + i)).id_uf <= 26)
-            {
-                if ((*(fabricante + i)).id_uf == v)
-                strcpy((*(uf + fabricante[i].id_uf)).nome, ufs[v]);
+        if ((*(fabricante + i)).id_uf >= 0 && (*(fabricante + i)).id_uf <= 26)
+        {
+            if ((*(fabricante + i)).id_uf == v)
+            strcpy((*(uf + fabricante[i].id_uf)).nome, ufs[v]);
 
-            }
         }
+    }
 }
 
-int le_valida_marca(FABRICANTE *fabricante, UF *uf)
+int le_valida_marca(FABRICANTE **fabricante, UF *uf)
 { // CHAMADA NA MAIN -> qtd_marcas = le_valida_marca(fabricante);
     int marca_registrada = 0;
     char confirm;
 
     while (marca_registrada < MIN_FABRICANTE)
     { // minimo de 2 marcas registradas
-        RegistrarMarca(fabricante, marca_registrada);
-        RegistrarSite(fabricante, marca_registrada);
-        RegistrarTelefone(fabricante, marca_registrada);
-        receber_UF_fabricante(fabricante, marca_registrada, uf);
+        RegistrarMarca(*fabricante, marca_registrada);
+        RegistrarSite(*fabricante, marca_registrada);
+        RegistrarTelefone(*fabricante, marca_registrada);
+        receber_UF_fabricante(*fabricante, marca_registrada, uf);
 
         marca_registrada++;
     }
@@ -239,10 +256,12 @@ int le_valida_marca(FABRICANTE *fabricante, UF *uf)
 
         if ((confirm == 's' || confirm == 'S') && marca_registrada < MAX_FABRICANTE)
         {
-            RegistrarMarca(fabricante, marca_registrada);
-            RegistrarSite(fabricante, marca_registrada);
-            RegistrarTelefone(fabricante, marca_registrada);
-            receber_UF_fabricante(fabricante, marca_registrada, uf);
+
+            *fabricante = realloc(*fabricante, ((marca_registrada + 1) * sizeof(FABRICANTE)));
+            RegistrarMarca(*fabricante, marca_registrada);
+            RegistrarSite(*fabricante, marca_registrada);
+            RegistrarTelefone(*fabricante, marca_registrada);
+            receber_UF_fabricante(*fabricante, marca_registrada, uf);
             marca_registrada++;
         }
 
@@ -255,7 +274,7 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
 {
     int i = 0;
     int ids_fabrs[5] = {};
-    if (ans == 1|| ans ==11)
+    if (ans == 1 || ans == 11)
     {
         preenche_vet_com_ids(ids_fabrs, marca_registrada);
     }
@@ -584,21 +603,19 @@ void DescricaoProduto(PRODUTO *produto, int i)
 
 void PesoProduto(PRODUTO *produto, int i)
 {
-    printf("Infome o peso(KG):\n> ");
-    scanf("%f", &produto[i].peso);
+    produto[i].peso = le_valida_constraints(0.05, 50, "Informe o peso(KG):\n> ", "!!!O peso deve estar entre 0.05kg e 50kg!!!");
+    // validação
 }
 
 void ValorVendaProduto(PRODUTO *produto, int i)
 {
-    printf("Informe o valor de venda(R$):\n> ");
-    scanf("%f", &produto[i].valor_venda);
+    produto[i].valor_venda = le_valida_constraints(1, 10000, "Informe o valor de venda(R$):\n> ", "!!!O preço deve estar entre 1 real e 10000 reais!!!");
     // validação
 }
 
 void ValorCompraProduto(PRODUTO *produto, int i)
 {
-    printf("Informe o valor de compra(R$):\n> ");
-    scanf("%f", &produto[i].valor_compra);
+    produto[i].valor_compra = le_valida_constraints(0.5, 8000, "Informe o valor de compra(R$):\n> ", "!!!O preço de compra deve estar entre 0.5 e 8000 reais!!!");
     // validação
 }
 
@@ -617,19 +634,19 @@ float ValorPercentualLucro(PRODUTO *produto, int i, float ValorLucro)
     return PercentualLucro;
 }
 
-int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
+int le_valida_produto(PRODUTO **produto, UF *uf, FABRICANTE *fabricante, int qtd_fabr)
 { // CHAMADA NA MAIN --> qtd_produtos = le_valida_produto(produto, uf);
     int produto_registrado = 0;
     char confirm;
 
     while (produto_registrado < MIN_PRODUTO)
     { // minimo de 5 produtos registrados
-        nomeProduto(produto, produto_registrado);
-        DescricaoProduto(produto, produto_registrado);
-        PesoProduto(produto, produto_registrado);
-        ValorCompraProduto(produto, produto_registrado);
-        ValorVendaProduto(produto, produto_registrado);
-        associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
+        nomeProduto(*produto, produto_registrado);
+        DescricaoProduto(*produto, produto_registrado);
+        PesoProduto(*produto, produto_registrado);
+        ValorCompraProduto(*produto, produto_registrado);
+        ValorVendaProduto(*produto, produto_registrado);
+        associar_fabr_a_prod(*produto, produto_registrado, fabricante, qtd_fabr);
         produto_registrado++;
     }
 
@@ -640,12 +657,13 @@ int le_valida_produto(PRODUTO *produto, UF *uf, FABRICANTE *fabricante, int qtd_
 
         if ((confirm == 's' || confirm == 'S') && produto_registrado < MAX_PRODUTO)
         {
-            nomeProduto(produto, produto_registrado);
-            DescricaoProduto(produto, produto_registrado);
-            PesoProduto(produto, produto_registrado);
-            ValorCompraProduto(produto, produto_registrado);
-            ValorVendaProduto(produto, produto_registrado);
-            associar_fabr_a_prod(produto, produto_registrado, fabricante, qtd_fabr);
+            *produto = realloc(*produto, (produto_registrado + 1) * sizeof(PRODUTO));
+            nomeProduto(*produto, produto_registrado);
+            DescricaoProduto(*produto, produto_registrado);
+            PesoProduto(*produto, produto_registrado);
+            ValorCompraProduto(*produto, produto_registrado);
+            ValorVendaProduto(*produto, produto_registrado);
+            associar_fabr_a_prod(*produto, produto_registrado, fabricante, qtd_fabr);
             produto_registrado++;
         }
 
@@ -784,8 +802,8 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             }
             ContPosicao++;
         }
-        //printf(" %s", uf[ids_produtos[i]].nome);
-        //printf(" %s", uf[fabricante[i].id_uf].nome); // OBS: nao temos produto[].id_uf pois associamos a uf do produto ao fabricante
+        // printf(" %s", uf[ids_produtos[i]].nome);
+        // printf(" %s", uf[fabricante[i].id_uf].nome); // OBS: nao temos produto[].id_uf pois associamos a uf do produto ao fabricante
 
         ContPosicao = 0;
         /*ContPosicao += 2; // todas uf possuem apenas 2letras.
@@ -821,7 +839,7 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
         printf("                          RELATORIO %d -  %s               ", ans, relatorio[ans]);
         printf("\n================================================================================\n");
         printf("%s\n", cabecalhoFabricante);
-        if (ans == 1 || ans ==11)
+        if (ans == 1 || ans == 11)
         {
             nome__marca_compactado(fabricante, marca_registrada, produto, ids_produtos, uf, ans);
         }
@@ -1114,10 +1132,10 @@ void ord_decrescente_valor_venda(PRODUTO produtos[], int ids_pvenda_crescente[],
 
 void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int marca_registrada, UF *uf)
 {
-    int i, idx_uf_pesquisada,aux;
-    int j,retorno;
+    int i, idx_uf_pesquisada, aux;
+    int j, retorno;
     char uf_search[30];
-    char ufs[27 /*nm_ufs*/][50] =
+    char ufs[TOTAL_UFS /*nm_ufs*/][50] =
         {" AC", " AL", " AP", " AM", " BA",
          " CE", " DF", " ES", " GO", "MA",
          "MT", "MS", "MG", "PA", "PB",
@@ -1130,7 +1148,6 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
     for (int i = 0; i < marca_registrada; i++)
     {
         printf("[%d]%s\t", i, uf[fabricantes[i].id_uf].nome);
-
     }
     printf("\n> ");
     scanf("%d", &idx_uf_pesquisada);
@@ -1168,20 +1185,22 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
     
 
     // organizando a impressao do nome da uf pesquisada
-    for (int i = 0; i < marca_registrada; i++){
-        if(idx_uf_pesquisada==i)
-        strcpy(uf[idx_uf_pesquisada].nome, uf[fabricantes[i].id_uf].nome);
+    for (int i = 0; i < marca_registrada; i++)
+    {
+        if (idx_uf_pesquisada == i)
+            strcpy(uf[idx_uf_pesquisada].nome, uf[fabricantes[i].id_uf].nome);
     }
-    for (int v = 0; v < 27; v++)
+    for (int v = 0; v < TOTAL_UFS; v++)
     {
         retorno = strcmp(uf[idx_uf_pesquisada].nome, ufs[v]);
-        if(retorno == 0){
+        if (retorno == 0)
+        {
             idx_uf_pesquisada = v;
         }
     }
 
     system("clear"); // linux
-    system("cls"); // windows
+    system("cls");   // windows
     printf("\n=====================================================================================================\n");
     printf("                          RELATORIO 3 - Produtos de um determinado estado            ");
     printf("\n=====================================================================================================\n");
@@ -1218,9 +1237,10 @@ void list_prods_marca(PRODUTO *produtos, FABRICANTE *fabricantes, int tam)
     }
 }
 
-void list_prods_ordem_alfab_crescente(PRODUTO produtos[], int ids_produtos[], int quantidade_de_produtos){
-    
-    int i=0,ids_ordenados[50]={};
+void list_prods_ordem_alfab_crescente(PRODUTO produtos[], int ids_produtos[], int quantidade_de_produtos)
+{
+
+    int i = 0, ids_ordenados[50] = {};
 
     // colocando todos os ids de produtos que foram trazidos
     for (i = 0; i < quantidade_de_produtos; i++)
@@ -1228,19 +1248,20 @@ void list_prods_ordem_alfab_crescente(PRODUTO produtos[], int ids_produtos[], in
         ids_ordenados[i] = i;
     }
 
-    //Colocando em ordem alfabetica 
+    // Colocando em ordem alfabetica
     qsort(produtos, quantidade_de_produtos, sizeof(PRODUTO), compara_nome_produtos);
     // usa o array de ids para imprmir
     copiar_vet(ids_produtos, ids_ordenados, quantidade_de_produtos);
     printf("\nOrdem crescente de A-Z.\n");
 }
 
-void list_nomeMarca_ordem_alfab_decrescente(FABRICANTE fabricantes[], int ids_nomeMarca_decrescente[], int quantidade_de_fabricantes){
+void list_nomeMarca_ordem_alfab_decrescente(FABRICANTE fabricantes[], int ids_nomeMarca_decrescente[], int quantidade_de_fabricantes)
+{
 
     // usa o array de ids para imprmir
     preenche_vet_com_ids(ids_nomeMarca_decrescente, quantidade_de_fabricantes);
 
-    //Colocando em ordem alfabetica
+    // Colocando em ordem alfabetica
     qsort(fabricantes, quantidade_de_fabricantes, sizeof(FABRICANTE), compara_nome_marca);
 }
 
@@ -1279,13 +1300,39 @@ int compara_nome_produtos(const void *a, const void *b)
 {
     const PRODUTO *produtoA = (const PRODUTO *)a;
     const PRODUTO *produtoB = (const PRODUTO *)b;
-    //retorna em ordem crescente(A-Z)
+    // retorna em ordem crescente(A-Z)
     return strcmp((*(produtoA)).nome, (*(produtoB)).nome);
 }
 
-int compara_nome_marca(const void *a, const void *b){
+int compara_nome_marca(const void *a, const void *b)
+{
     const FABRICANTE *fabricanteA = (const FABRICANTE *)a;
     const FABRICANTE *fabricanteB = (const FABRICANTE *)b;
-    //retorna em ordem decrescente(Z-A)
+    // retorna em ordem decrescente(Z-A)
     return strcmp((*(fabricanteB)).nome_marca, (*(fabricanteA)).nome_marca);
+}
+
+float le_valida_constraints(float min, float max, char message[], char err[])
+{
+    float n;
+    int loop = 1;
+    if (max < min)
+    {
+        float aux = max;
+        max = min;
+        min = aux;
+    }
+    do
+    {
+        printf("%s", message);
+        scanf("%f", &n);
+        if ((min <= n) && (n <= max))
+        {
+            return n;
+        }
+        else
+        {
+            printf("%s", err);
+        }
+    } while (loop);
 }
