@@ -216,11 +216,12 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
         }
         printf("\n");
     }
-    //validacao, apenas numerica, das ufs
-    do{
+    // validacao, apenas numerica, das ufs
+    do
+    {
         printf("Selecione uma UF:\n> ");
-        scanf("%d", &(*(fabricante + i)).id_uf); 
-    }while( (*(fabricante + i)).id_uf < 0 || (*(fabricante + i)).id_uf > 26);
+        scanf("%d", &(*(fabricante + i)).id_uf);
+    } while ((*(fabricante + i)).id_uf < 0 || (*(fabricante + i)).id_uf > 26);
 
     // atribuindo nome para cada uf escolhida
     for (int v = 0; v < TOTAL_UFS; v++)
@@ -228,8 +229,7 @@ void receber_UF_fabricante(FABRICANTE *fabricante, int i, UF *uf)
         if ((*(fabricante + i)).id_uf >= 0 && (*(fabricante + i)).id_uf <= 26)
         {
             if ((*(fabricante + i)).id_uf == v)
-            strcpy((*(uf + fabricante[i].id_uf)).nome, ufs[v]);
-
+                strcpy((*(uf + fabricante[i].id_uf)).nome, ufs[v]);
         }
     }
 }
@@ -292,20 +292,23 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
         int posicao_DigTelefone = 0; // ##
         if (i == 0)
         {
-            if(ans ==6){
+            if (ans == 6)
+            {
                 printf("-----------------+----------------------------------+------------------+--------+-----------------+--------------\n");
             }
-            else{
+            else
+            {
                 printf("-----------------+----------------------------------+------------------+--------\n"); // quebra linha entre uma marca e outra
             }
-            
         }
         else
         {
-            if(ans==6){
+            if (ans == 6)
+            {
                 printf("\n-----------------+----------------------------------+------------------+--------+-----------------+--------------\n");
             }
-            else{
+            else
+            {
                 printf("\n-----------------+----------------------------------+------------------+--------\n");
             }
         }
@@ -354,19 +357,24 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                         if (posicao_DigTelefone == 17)
                         {
                             printf("| ");
-                            printf("%-7s", uf[(*(fabricante +ids_fabrs[i])).id_uf].nome); // TABELA - UF
-                            if(ans == 6){
+                            printf("%-7s", uf[(*(fabricante + ids_fabrs[i])).id_uf].nome); // TABELA - UF
+                            if (ans == 6)
+                            {
                                 printf("| ");
-                                int sequecia_caracter_nome =0;
-                                while(sequecia_caracter_nome<=produto[ids_produtos[i]].qtd_carac_nome_produto){
-                                    printf("%s",(*(produto + ids_produtos[i])).nome); // TABELA - NOME PRODUTO
+                                int sequecia_caracter_nome = 0;
+                                while (sequecia_caracter_nome <= (*(produto + ids_produtos[i])).qtd_carac_nome_produto)
+                                {
+                                    printf("%c", (*(produto + ids_produtos[i])).nome[sequecia_caracter_nome]); // TABELA - NOME PRODUTO
                                     sequecia_caracter_nome++;
                                 }
-                                while(sequecia_caracter_nome<17){ // condicoes de alinhamento 
+
+                                while (sequecia_caracter_nome < 20)
+                                { // condicoes de alinhamento
                                     printf(" ");
-                                    if(sequecia_caracter_nome==16){
+                                    if (sequecia_caracter_nome == 16)
+                                    {
                                         printf("| ");
-                                        printf("%.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
+                                        printf("R$ %.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
                                     }
                                     sequecia_caracter_nome++;
                                 }
@@ -436,19 +444,24 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
-                        printf("%-7s", uf[(*(fabricante +ids_fabrs[i])).id_uf].nome); // TABELA - UF
-                        if(ans == 6){
+                        printf("%-7s", uf[(*(fabricante + ids_fabrs[i])).id_uf].nome); // TABELA - UF
+                        if (ans == 6)
+                        {
                             printf("| ");
-                            int sequecia_caracter_nome =0;
-                            while(sequecia_caracter_nome<=produto[ids_produtos[i]].qtd_carac_nome_produto){
-                                printf("%s",(*(produto + ids_produtos[i])).nome); // TABELA - NOME PRODUTO
+                            int sequecia_caracter_nome = 0;
+                            while (sequecia_caracter_nome <= (*(produto + ids_produtos[i])).qtd_carac_nome_produto)
+                            {
+                                printf("%c", (*(produto + ids_produtos[i])).nome[sequecia_caracter_nome]); // TABELA - NOME PRODUTO
                                 sequecia_caracter_nome++;
                             }
-                            while(sequecia_caracter_nome<17){ // condicoes de alinhamento 
+
+                            while (sequecia_caracter_nome < 20)
+                            { // condicoes de alinhamento
                                 printf(" ");
-                                if(sequecia_caracter_nome==16){
+                                if (sequecia_caracter_nome == 16)
+                                {
                                     printf("| ");
-                                    printf("%.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
+                                    printf("R$ %.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
                                 }
                                 sequecia_caracter_nome++;
                             }
@@ -546,19 +559,24 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                             if (posicao_DigTelefone == 17)
                             {
                                 printf("| ");
-                                printf("%-7s", uf[(*(fabricante +ids_fabrs[i])).id_uf].nome); // TABELA - UF
-                                if(ans == 6){
+                                printf("%-7s", uf[(*(fabricante + ids_fabrs[i])).id_uf].nome); // TABELA - UF
+                                if (ans == 6)
+                                {
                                     printf("| ");
-                                    int sequecia_caracter_nome =0;
-                                    while(sequecia_caracter_nome<=produto[ids_produtos[i]].qtd_carac_nome_produto){
-                                        printf("%s",(*(produto + ids_produtos[i])).nome); // TABELA - NOME PRODUTO
+                                    int sequecia_caracter_nome = 0;
+                                    while (sequecia_caracter_nome <= (*(produto + ids_produtos[i])).qtd_carac_nome_produto)
+                                    {
+                                        printf("%c", (*(produto + ids_produtos[i])).nome[sequecia_caracter_nome]); // TABELA - NOME PRODUTO
                                         sequecia_caracter_nome++;
                                     }
-                                    while(sequecia_caracter_nome<17){ // condicoes de alinhamento 
+
+                                    while (sequecia_caracter_nome < 20)
+                                    { // condicoes de alinhamento
                                         printf(" ");
-                                        if(sequecia_caracter_nome==16){
+                                        if (sequecia_caracter_nome == 16)
+                                        {
                                             printf("| ");
-                                            printf("%.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
+                                            printf("R$ %.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
                                         }
                                         sequecia_caracter_nome++;
                                     }
@@ -632,18 +650,22 @@ void nome__marca_compactado(FABRICANTE *fabricante, int marca_registrada, PRODUT
                     if (posicao_DigTelefone == 17)
                     {
                         printf("| ");
-                        printf("%-7s", uf[(*(fabricante +ids_fabrs[i])).id_uf].nome); // TABELA - UF
-                        if(ans == 6){
+                        printf("%-7s", uf[(*(fabricante + ids_fabrs[i])).id_uf].nome); // TABELA - UF
+                        if (ans == 6)
+                        {
                             printf("| ");
-                            int sequecia_caracter_nome =0;
-                            while(sequecia_caracter_nome<=(*(produto + ids_produtos[i])).qtd_carac_nome_produto){
-                                printf("%c",(*(produto + ids_produtos[i])).nome[sequecia_caracter_nome]); // TABELA - NOME PRODUTO
+                            int sequecia_caracter_nome = 0;
+                            while (sequecia_caracter_nome <= (*(produto + ids_produtos[i])).qtd_carac_nome_produto)
+                            {
+                                printf("%c", (*(produto + ids_produtos[i])).nome[sequecia_caracter_nome]); // TABELA - NOME PRODUTO
                                 sequecia_caracter_nome++;
                             }
-                            
-                            while(sequecia_caracter_nome<20){ // condicoes de alinhamento 
+
+                            while (sequecia_caracter_nome < 20)
+                            { // condicoes de alinhamento
                                 printf(" ");
-                                if(sequecia_caracter_nome==16){
+                                if (sequecia_caracter_nome == 16)
+                                {
                                     printf("| ");
                                     printf("R$ %.2f", produto[ids_produtos[i]].valor_venda); // TABELA - PREÇO
                                 }
@@ -749,7 +771,7 @@ int le_valida_produto(PRODUTO **produto, UF *uf, FABRICANTE *fabricante, int qtd
     return produto_registrado;
 }
 
-void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_produtos[], UF *uf)
+void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_produtos[], UF *uf,FABRICANTE*fabricante)
 {
     int i;
     float VetLucro[produto_registrado];
@@ -762,11 +784,11 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
 
         if (i == 0)
         {
-            printf("-----------------+------------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
+            printf("-----------------+------------+-----------------+-----------------+-----------------+-----------------+-------------+-------------------------\n");
         }
         else
         {
-            printf("\n-----------------+------------+-----------------+-----------------+-----------------+-----------------+-------------------------\n");
+            printf("\n-----------------+------------+-----------------+-----------------+-----------------+-----------------+-------------+-------------------------\n");
         }
 
         /*OBJ: Descobrir a quantidade de digitos que tem em cada valor sem precisa alterar a sua "TIPAGEM padrão"*/
@@ -879,11 +901,11 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             }
             ContPosicao++;
         }
-        // printf(" %s", uf[ids_produtos[i]].nome);
+        printf("%-7s", uf[(*(fabricante + produto[ids_produtos[i]].id_fabricante)).id_uf].nome);
         // printf(" %s", uf[fabricante[i].id_uf].nome); // OBS: nao temos produto[].id_uf pois associamos a uf do produto ao fabricante
 
         ContPosicao = 0;
-        /*ContPosicao += 2; // todas uf possuem apenas 2letras.
+        ContPosicao += 2; // todas uf possuem apenas 2letras.
         while (ContPosicao < 6)
         {
             printf(" ");
@@ -893,7 +915,7 @@ void nome_produto_compactado(PRODUTO *produto, int produto_registrado, int ids_p
             }
             ContPosicao++;
         }
-        */
+        
         printf(" %s", produto[ids_produtos[i]].descricao);
     }
 }
@@ -904,14 +926,14 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
 {
     char cabecalhoFabricante[82] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   "};
     char cabecalhoTopFabricanteBaratos[] = {"     MARCA       |               SITE               |     TELEFONE     |   UF   |   NOME-PRODUTO  | PRECO-PRODUTO"};
-    char cabecalhoProduto[] = {"     NOME        |   PESO     |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |          DESCRICAO                "};
+    char cabecalhoProduto[] = {"     NOME        |   PESO     |   VALOR-VENDA   |  VALOR-COMPRA   |   VALOR-LUCRO   |  PENCENT-LUCRO  |      UF     |        DESCRICAO                "};
     char relatorio[12][80] = {"", "Lista de todas as marcas", "Lista de todos os produtos", "Produtos de um determinado estado", "Produtos de uma determinada marca", "Estado(s) do(s) produto(s) mais caro(s)", "Fabricante(s) com produto(s) mais barato(s)", "Produtos em ordem crescente de valor-venda", "Produtos em ordem crescente de lucro", "Produtos em ordem crescente de percentual de lucro", "Lista dos produtos em ordem alfabetica(A-Z)", "Lista marcas em ordem alfabetica(Z-A)"};
 
     // opção 1,6 e 11 do menu principal imprime esta tabela
     if (ans == 1 || ans == 6 || ans == 11)
     {
         system("clear"); // linux
-        system("cls");   // windows    
+        system("cls");   // windows
         if (ans == 1 || ans == 11)
         {
             printf("\n================================================================================\n");
@@ -934,11 +956,11 @@ void EstruturaTabela(FABRICANTE *fabricante, int marca_registrada, int ids_produ
     {
         system("clear"); // linux
         system("cls");   // windows
-        printf("\n================================================================================================================================\n");
+        printf("\n==============================================================================================================================================\n");
         printf("                          RELATORIO %d - %s                                                                              ", ans, relatorio[ans]);
-        printf("\n================================================================================================================================\n");
+        printf("\n==============================================================================================================================================\n");
         printf("%s\n", cabecalhoProduto);
-        nome_produto_compactado(produto, produto_registrado, ids_produtos, uf);
+        nome_produto_compactado(produto, produto_registrado, ids_produtos, uf,fabricante);
     }
 }
 
@@ -949,32 +971,42 @@ int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *f
     imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
 
     scanf("%d", &id_fabr);
-    if(qtd_fabr==1){
-        while(id_fabr!= 0){
+    if (qtd_fabr == 1)
+    {
+        while (id_fabr != 0)
+        {
             imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
             scanf("%d", &id_fabr);
         }
     }
-    else if(qtd_fabr==2){
-        while(id_fabr!= 0 && id_fabr!=1){
+    else if (qtd_fabr == 2)
+    {
+        while (id_fabr != 0 && id_fabr != 1)
+        {
             imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
             scanf("%d", &id_fabr);
         }
     }
-    else if(qtd_fabr==3){
-        while(id_fabr!= 0 && id_fabr!=1 && id_fabr!=2){
+    else if (qtd_fabr == 3)
+    {
+        while (id_fabr != 0 && id_fabr != 1 && id_fabr != 2)
+        {
             imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
             scanf("%d", &id_fabr);
         }
     }
-    else if(qtd_fabr==4){
-        while(id_fabr!= 0 && id_fabr!=1 && id_fabr!=2 && id_fabr!=3 ){
+    else if (qtd_fabr == 4)
+    {
+        while (id_fabr != 0 && id_fabr != 1 && id_fabr != 2 && id_fabr != 3)
+        {
             imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
             scanf("%d", &id_fabr);
         }
     }
-    else{
-        while(id_fabr!= 0 && id_fabr!=1 && id_fabr!=2 && id_fabr!=3 && id_fabr!=4){
+    else
+    {
+        while (id_fabr != 0 && id_fabr != 1 && id_fabr != 2 && id_fabr != 3 && id_fabr != 4)
+        {
             imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
             scanf("%d", &id_fabr);
         }
@@ -1262,38 +1294,47 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
     }
     printf("\n> ");
     scanf("%d", &idx_uf_pesquisada);
-    //validacao da uf a ser pesquisada de acordo com a quantidade de fabricantes disponiveis
-    if(marca_registrada==1){
-        while(idx_uf_pesquisada!=0){
+    // validacao da uf a ser pesquisada de acordo com a quantidade de fabricantes disponiveis
+    if (marca_registrada == 1)
+    {
+        while (idx_uf_pesquisada != 0)
+        {
             printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
             scanf("%d", &idx_uf_pesquisada);
         }
     }
-    else if(marca_registrada==2){
-        while(idx_uf_pesquisada!=0 && idx_uf_pesquisada!=1){
+    else if (marca_registrada == 2)
+    {
+        while (idx_uf_pesquisada != 0 && idx_uf_pesquisada != 1)
+        {
             printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
             scanf("%d", &idx_uf_pesquisada);
         }
     }
-    else if(marca_registrada==3){
-        while(idx_uf_pesquisada!=0 && idx_uf_pesquisada!=1 && idx_uf_pesquisada!=2){
+    else if (marca_registrada == 3)
+    {
+        while (idx_uf_pesquisada != 0 && idx_uf_pesquisada != 1 && idx_uf_pesquisada != 2)
+        {
             printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
             scanf("%d", &idx_uf_pesquisada);
         }
     }
-    else if(marca_registrada==4){
-        while(idx_uf_pesquisada!=0 && idx_uf_pesquisada!=1 && idx_uf_pesquisada!=2 && idx_uf_pesquisada!=3){
+    else if (marca_registrada == 4)
+    {
+        while (idx_uf_pesquisada != 0 && idx_uf_pesquisada != 1 && idx_uf_pesquisada != 2 && idx_uf_pesquisada != 3)
+        {
             printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
             scanf("%d", &idx_uf_pesquisada);
         }
     }
-    else{
-        while(idx_uf_pesquisada!= 0 && idx_uf_pesquisada!= 1 && idx_uf_pesquisada!= 2 && idx_uf_pesquisada!= 3 && idx_uf_pesquisada!= 4){
-        printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
-        scanf("%d", &idx_uf_pesquisada);
+    else
+    {
+        while (idx_uf_pesquisada != 0 && idx_uf_pesquisada != 1 && idx_uf_pesquisada != 2 && idx_uf_pesquisada != 3 && idx_uf_pesquisada != 4)
+        {
+            printf("\tA UF escolhida nao possui nenhum fabricante\nSelecione uma UF disponivel\n> ");
+            scanf("%d", &idx_uf_pesquisada);
+        }
     }
-    }
-    
 
     // organizando a impressao do nome da uf pesquisada
     for (int i = 0; i < marca_registrada; i++)
@@ -1328,7 +1369,7 @@ void list_prods_por_uf(PRODUTO *produtos, FABRICANTE *fabricantes, int tam, int 
     }
 }
 
-void list_prods_marca(PRODUTO *produtos, FABRICANTE *fabricantes, int tam)
+void list_prods_marca(PRODUTO *produtos, FABRICANTE *fabricantes, int tam/*, int ids_produtos[]*/)
 {
     int i = 0, idx_fabr = 0;
     printf("digite a marca a ser pesquisada: ");
