@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #define TOTAL_UFS 27
-#define MIN_PRODUTO 3
+#define MIN_PRODUTO 5
 #define MAX_PRODUTO 50
 #define MIN_FABRICANTE 2
 #define MAX_FABRICANTE 5
