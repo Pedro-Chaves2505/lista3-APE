@@ -868,6 +868,36 @@ int associar_fabr_a_prod(PRODUTO *produto, int produto_registrado, FABRICANTE *f
     imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
 
     scanf("%d", &id_fabr);
+    if(qtd_fabr==1){
+        while(id_fabr!= 0){
+            imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
+            scanf("%d", &id_fabr);
+        }
+    }
+    else if(qtd_fabr==2){
+        while(id_fabr!= 0 && id_fabr!=1){
+            imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
+            scanf("%d", &id_fabr);
+        }
+    }
+    else if(qtd_fabr==3){
+        while(id_fabr!= 0 && id_fabr!=1 && id_fabr!=2){
+            imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
+            scanf("%d", &id_fabr);
+        }
+    }
+    else if(qtd_fabr==4){
+        while(id_fabr!= 0 && id_fabr!=1 && id_fabr!=2 && id_fabr!=3 ){
+            imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
+            scanf("%d", &id_fabr);
+        }
+    }
+    else{
+        while(id_fabr!= 0 && id_fabr!=1 && id_fabr!=2 && id_fabr!=3 && id_fabr!=4){
+            imprimir_idFabr_nomeFabr(fabricante, qtd_fabr);
+            scanf("%d", &id_fabr);
+        }
+    }
 
     (*(produto + produto_registrado)).id_fabricante = id_fabr;
 
