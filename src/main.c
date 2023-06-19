@@ -708,13 +708,13 @@ void PesoProduto(PRODUTO *produto, int i)
 
 void ValorVendaProduto(PRODUTO *produto, int i)
 {
-    produto[i].valor_venda = le_valida_constraints(1, 10000, "Informe o valor de venda(R$):\n> ", "!!!O preço deve estar entre 1 real e 10000 reais!!!");
+    produto[i].valor_venda = le_valida_constraints(1, 10000, "Informe o valor de venda(R$):\n> ", "!!!O preco deve estar entre 1 real e 10000 reais!!!");
     // validação
 }
 
 void ValorCompraProduto(PRODUTO *produto, int i)
 {
-    produto[i].valor_compra = le_valida_constraints(0.5, 8000, "Informe o valor de compra(R$):\n> ", "!!!O preço de compra deve estar entre 0.5 e 8000 reais!!!");
+    produto[i].valor_compra = le_valida_constraints(0.5, 8000, "Informe o valor de compra(R$):\n> ", "!!!O preco de compra deve estar entre 0.5 e 8000 reais!!!");
     // validação
 }
 
